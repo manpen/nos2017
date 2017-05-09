@@ -1,0 +1,110 @@
+\ProvidesPackage{goethecc}[2016/01/05]
+
+\usepackage{color, colortbl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Thema "Frankfurt"
+\usetheme{Boadilla}
+\usecolortheme{orchid}
+
+% goethe farben
+\makeatletter
+\definecolor{goetheblau}{rgb}{0.000,0.380,0.561}
+\definecolor{hellgrau}{rgb}{0.973,0.965,0.961}
+\definecolor{sandgrau}{rgb}{0.894,0.890,0.867}
+\definecolor{dunkelgrau}{rgb}{0.302,0.294,0.275}
+\definecolor{purple}{rgb}{0.525,0.000,0.278}
+\definecolor{emorot}{rgb}{0.702,0.024,0.173}
+\definecolor{senfgelb}{rgb}{0.890,0.729,0.059}
+\definecolor{gruen}{rgb}{0.451,0.486,0.271}
+\definecolor{magenta}{rgb}{0.678,0.231,0.463}
+\definecolor{orange}{rgb}{0.788,0.384,0.082}
+\definecolor{sonnengelb}{rgb}{0.969,0.851,0.149}
+\definecolor{hellgruen}{cmyk}{0.4,0.17,.81,.07}
+\definecolor{lichtblau}{rgb}{0.282,0.663,0.855}
+\makeatletter
+
+% Seitenzahlen
+%\setbeamertemplate{footline}[frame number]
+\setbeamertemplate{footline}
+{
+	\hfill
+	\tiny{\insertshortauthor\ \ --\ \ \insertshorttitle \hspace*{.25cm} \insertframenumber{}}
+	\hspace*{.1cm}\newline
+	\quad \vspace{4pt}
+}
+
+% Navi-Leiste entfernen
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{footline}{}
+
+% Inhaltsverzeichnis auf 1 Ebene reduzieren
+\setcounter{tocdepth}{1}
+
+\setbeamercolor{normal text}{fg=dunkelgrau,bg=white}
+\setbeamercolor{alerted text}{fg=red}
+\setbeamercolor{example text}{fg=green!50!black}
+
+\setbeamercolor{structure}{fg=goetheblau}
+
+\setbeamercolor{background canvas}{parent=normal text}
+\setbeamercolor{background}{parent=background canvas}
+
+\setbeamercolor{palette primary}{fg=yellow,bg=yellow} % changed this
+\setbeamercolor{palette secondary}{use=structure,fg=structure.fg!100!green} % changed this
+\setbeamercolor{palette tertiary}{use=structure,fg=structure.fg!100!green} % changed this
+
+\newcommand{\goetheccBgGrau}{%
+    \tikz[overlay,remember picture]%
+        \node[at=(current page.south west),anchor=south west,inner sep=0pt,xshift=-0.13\textwidth,yshift=-0.03\textwidth] {%
+            \includegraphics[width=0.5\textwidth]{include/gu_logo_sandgrau.pdf}};%
+}
+
+\newcommand{\goetheccBgBlau}{%
+    \begin{tikzpicture}[overlay,remember picture] %
+    \node[at=(current page.north east),anchor=north east,inner sep=0, xshift=-0.02\textwidth, yshift=-0.025\textwidth] (fglogo) {%
+        \includegraphics[width=0.15\textwidth]{include/gu_logo_blau.pdf}};%
+    \path[draw, goetheblau, thick] ($(fglogo.south west) - (0.03\textwidth, 0)$) -- ($(fglogo.north west) - (0.03\textwidth, -100)$);%
+    \end{tikzpicture}
+}
+
+\usebackgroundtemplate{
+        \tikz[overlay,remember picture]%
+        \node[opacity=0.3,at=(current page.south west),anchor=south west,inner sep=0pt,xshift=-0.13\textwidth,yshift=-0.03\textwidth] {%
+            \includegraphics[width=0.5\textwidth]{include/gu_logo_sandgrau.pdf}};%
+        
+     {\tiny
+        	\tikz[overlay,remember picture]%
+        	\node[at=(current page.south east),anchor=south east,inner sep=0.5em,xshift=0.01\textwidth] {%
+        		\pgfmathtruncatemacro{\x}{\number\beamer@slideinframe - 1}%
+        		\insertframenumber{}.\x \hspace{1em}
+        	};
+     }
+}
+
+\newcommand{\goethccBgTitel}{\usebackgroundtemplate{\goetheccBgGrau}}
+\newcommand{\btVFill}{\vskip0pt plus 1filll}
+    
+\defbeamertemplate*{title page}{customized}[1][]
+{
+    \goetheccBgBlau
+    
+    \vspace*{0.25\textheight}
+    \hspace{0.05\textwidth}\begin{minipage}{0.8\textwidth}
+        \goethccBgTitel
+        \usebeamerfont{author}\insertauthor\par
+        \usebeamercolor[fg]{title}
+        \usebeamerfont{title}\inserttitle\par
+    \end{minipage}
+        
+    \btVFill
+
+    {\tiny
+        \tikz[overlay,remember picture]%
+        \node[at=(current page.south west),anchor=south west,inner sep=0.5em,xshift=0.01\textwidth] {%
+            \color{goetheblau}\insertdate        
+        };
+    }
+}

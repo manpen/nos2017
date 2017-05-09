@@ -1,0 +1,81 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage{goethecc}
+
+\usepackage{color, colortbl}
+
+\usepackage[USenglish]{babel}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+
+\usepackage{latexsym}
+\usepackage{xspace}
+
+\usepackage{siunitx}
+\sisetup{locale = DE}
+
+\usepackage{tikz}
+\usetikzlibrary{calc}   
+\usetikzlibrary{shapes,arrows,decorations,decorations.pathmorphing,decorations.pathreplacing,plotmarks}
+
+\usepackage{soul}
+
+\graphicspath{{./figures/}}
+
+\tikzset{onslide/.code args={<#1>#2}{%
+    \only<#1>{\pgfkeysalso{#2}} % \pgfkeysalso doesn't change the path
+}}
+\tikzset{onslidep/.code args={<#1>#2}{%
+		\ifthenelse{#1 = 0}{}{\only<#1->{\pgfkeysalso{#2}}} % \pgfkeysalso doesn't change the path
+}}
+\tikzset{onslidepp/.code args={<#1><#2>#3}{%
+		\ifthenelse{#1=0 \OR #2=0}{}{\only<#1-#2>{\pgfkeysalso{#3}}} % \pgfkeysalso doesn't change the path
+	}}
+\tikzset{temporal/.code args={<#1>#2#3#4}{%
+    \temporal<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}{\pgfkeysalso{#4}} % \pgfkeysalso doesn't change the path
+}}
+\tikzset{onif/.code args={<#1>#2}{%
+ 	\ifthenelse{#1}{\pgfkeysalso{#2}}{}%
+}}
+ 		
+\newcommand{\func}[1]{\texttt{\textcolor{goetheblau}{#1}}}
+\newcommand{\var}[1]{\textcolor{emorot}{$#1$}}
+\newcommand{\nname}[1]{\texttt{#1}}
+
+\newcommand{\tikzanchor}[2]{\tikz[overlay, remember picture]{\node[anchor=text, inner sep=0] (#1) {\phantom{Ig}};}#2}
+
+\usepackage{array}
+\newcolumntype{x}[1]{>{\centering\arraybackslash\hspace{0pt}}p{#1}}
+
+%\newcommand{\btVFill}{\vskip0pt plus 1filll}
+
+\begin{document}
+\title{
+	Und womit rechnest du so? \\[-0.5em]
+	\textcolor{dunkelgrau}{\small Programming -- How (not) to do it}
+}
+\author{
+	Jonathan Brast\\
+	Manuel Penschuck \\
+} 
+\date{10. Juni 2017}
+
+{
+\setbeamertemplate{footline}{} 
+\goethccBgTitel
+\begin{frame}
+  \titlepage
+\end{frame}
+}
+\addtocounter{framenumber}{-1}
+
+
+%\frame{\frametitle{Outline}\tableofcontents}
+
+%%%%%%%%%%%%%
+\input{adding-in-binary}
+
+
+
+\end{document}
+
