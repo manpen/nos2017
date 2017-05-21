@@ -1,0 +1,76 @@
+\newcommand{\turingI}[2]
+	% parameters:
+	%  1 key of current state
+	%  2 band contents
+{
+\newcommand{\tmStateCurrent}{#1}
+\newcommand{\tmBandContent}{#2}
+%
+\begin{center}
+	\scalebox{0.8}{%
+	\begin{tmStates}
+	%%%%%% BEGIN-TM: turingI, B111011B %%%%%
+		\tmstate{first-minus}{Suche Minus}  {}{}
+		\tmstate{right-digit}{Rechte Ziffer}{above right=of first-minus}{}
+		\tmstate{left-digit} {Linke Ziffer} {below right=of first-minus}{}
+		\tmstate{clean}      {Aufräumen}    {below right=of right-digit}{}
+		
+		\tmstart{first-minus}
+		
+		\tmtrans{first-minus}{first-minus}{\trans 11R}{loop below}{}
+		\tmtrans{first-minus}{right-digit.west}{\trans 00R}{above,sloped, bend left}{}
+	
+		\tmtrans{right-digit}{right-digit}{\trans 00R}{loop above}{}
+		\tmtrans{right-digit}{left-digit}{\trans 10L}{bend right, below, left}{}
+		\tmtrans{right-digit}{clean}{\trans BBL}{bend left, below, above, sloped}{}
+		
+	
+		\tmtrans{left-digit}{left-digit}{\trans 00L}{loop below}{}
+		\tmtrans{left-digit}{right-digit}{\trans 10L}{bend right, below, right}{}
+	
+		\tmtrans{clean}{clean}{\trans 0BL}{loop below}{}
+	%%%%%% END-TM: turingI %%%%%
+	\end{tmStates}}
+\end{center}
+
+\begin{center}
+	\scalebox{0.8}{%
+		\tmBand{#2}
+	}
+\end{center}
+}
+
+
+\begin{frame}{Unäre Subtraktion}
+	\only<+>{\turingI{first-minus}{@1@11011}}
+	\only<+>{\turingI{first-minus}{1@1@1011}}
+	\only<+>{\turingI{first-minus}{11@1@011}}
+
+	\only<+>{\turingI{right-digit}{111@0@11}}
+	\only<+>{\turingI{right-digit}{1110@1@1}}
+
+	\only<+>{\turingI{left-digit} {111@0@01}}
+	\only<+>{\turingI{left-digit} {11@1@001}}
+
+	\only<+>{\turingI{right-digit}{110@0@01}}
+	\only<+>{\turingI{right-digit}{1100@0@1}}
+	\only<+>{\turingI{right-digit}{11000@1@}}
+
+	\only<+>{\turingI{left-digit} {1100@0@0}}
+	\only<+>{\turingI{left-digit} {110@0@00}}
+	\only<+>{\turingI{left-digit} {11@0@000}}
+	\only<+>{\turingI{left-digit} {1@1@0000}}
+
+	\only<+>{\turingI{right-digit}{10@0@000}}
+	\only<+>{\turingI{right-digit}{100@0@00}}
+	\only<+>{\turingI{right-digit}{1000@0@0}}
+	\only<+>{\turingI{right-digit}{10000@0@}}
+	\only<+>{\turingI{right-digit}{100000@B@}}
+
+	\only<+>{\turingI{clean}{10000@0@B}}
+	\only<+>{\turingI{clean}{1000@0@BB}}
+	\only<+>{\turingI{clean}{100@0@BBB}}
+	\only<+>{\turingI{clean}{10@0@BBBB}}
+	\only<+>{\turingI{clean}{1@0@BBBBB}}
+	\only<+>{\turingI{clean}{@1@BBBBBB}}
+\end{frame}

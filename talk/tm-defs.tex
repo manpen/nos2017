@@ -1,0 +1,116 @@
+\newcommand{\tmstate}[4]{
+	% 1 key
+	% 2 label
+	% tikz options
+	% tikz position
+	\node[
+		tm-state,
+		onif={<\equal{#1}{\tmStateCurrent}>tm-state-active},
+		#3
+	] (#1) #4 {#2};
+}
+
+\newcommand\tmstart[1]{
+	\path[tm-trans]  ($(#1.west)-(1.5em, 0)$) to ++(1.5em, 0);
+}
+
+\newcommand{\trans}[3]{
+	\def\transLabel{%
+		\textbf{\texttt{#1}} zu \textbf{\texttt{#2}}, 
+		\ifthenelse{\equal{#3}{L}}{$\Leftarrow$}{\ifthenelse{\equal{#3}{R}}{$\Rightarrow$}{$\Downarrow$}}%
+	}%
+	%
+	\IfSubStr{\tmBandContent}{@#1@}
+	{\ifthenelse{\tmTransOfCurrentState}{\textcolor{red}{\transLabel}}{\transLabel}}
+	{\transLabel}
+}
+
+\newcommand{\tmtrans}[5]{
+	% 1 current state
+	% 2 next state
+	% 3 instruction
+	% 4 format path
+	% 5 format label
+
+   \def\tmTransOfCurrentState{\equal{\tmStateCurrent}{#1}}
+   \def\tmConditionalTrans{}
+   {
+	   \renewcommand{\trans}[3]{%
+		   \IfSubStr{\tmBandContent}{@##1@}{\ifthenelse{\tmTransOfCurrentState}{\global\def\tmConditionalTrans{tm-trans-active}{}}{}}{}%
+	   }%
+	   #3%
+   }
+
+   \path[tm-trans, \tmConditionalTrans] (#1) edge[#4] node[align=center, #5] {#3} (#2);
+}
+
+\newcommand{\turingBandActiveChar}[1]{
+	\turingBandActiveCharHelp#1\relax\relax\relax\relax
+}
+\def\turingBandActiveCharHelp#1#2#3\relax{%
+	\ifx#1\relax\else%
+	\ifthenelse{\equal{#1}{@}}{#2}
+	{\turingBandActiveCharHelp#2#3\relax\relax}%
+	\fi%
+}
+
+\newcommand{\decreasedCounter}[1]{\numexpr\value{#1} - 1\relax}
+\newcounter{tmbandcnt}
+\newcounter{tmbandcntHead}
+
+\newcommand{\tmbandCellCaption}[1]{%
+	\ifthenelse{\equal{#1}{B}}{$\mathbb B$}{#1}%
+}
+
+\newcommand\turingBandNodes[1]{
+	\setcounter{tmbandcnt}{0}
+	\setcounter{tmbandcnt}{0}
+	\turingBandHelp#1\relax\relax\relax\relax
+}
+\def\turingBandHelp#1#2#3#4\relax{%
+	\ifx#1\relax{}\else{%
+		\stepcounter{tmbandcnt}
+		\ifthenelse{\equal{#1}{@}}{%
+			\node[tmcell-active, right=of tmbandcell-\the\decreasedCounter{tmbandcnt}] (tmbandcell-\thetmbandcnt) {\tmbandCellCaption#2};
+			\setcounter{tmbandcntHead}{\thetmbandcnt}%
+			\turingBandHelp#4\relax\relax\relax\relax%		
+		}{%
+		\node[tmcell, right=of tmbandcell-\the\decreasedCounter{tmbandcnt}] (tmbandcell-\thetmbandcnt) {\tmbandCellCaption#1};
+		\turingBandHelp#2#3#4\relax\relax\relax%
+	}%
+}
+\fi%
+}
+
+\newenvironment{tmStates}{
+	\begin{tikzpicture}[
+	node distance = 4em and 15em,
+	on grid,
+	tm-state/.style={draw, minimum width=6em},
+	tm-state-active/.style={fill=red!50},
+	tm-state-next/.style={blue},
+	tm-trans/.style={draw, ->, ,shorten >=2pt, thick, auto},
+	tm-trans-active/.style={red},
+	loop above/.style={looseness=8, out=120, in=60},
+	loop below/.style={looseness=8, out=300, in=240}
+	]
+}{
+\end{tikzpicture}
+}
+
+\newcommand{\tmBand}[1]{
+\begin{tikzpicture}[
+	node distance=0,
+	tmcell/.style={draw, minimum width=2em, minimum height=2em},
+	tmcell-active/.style={tmcell},
+	tmhead-marker/.style={draw, ultra thick, red, circle, minimum width=2.5em}
+]
+	\node (tmbandcell-0) {};
+	\turingBandNodes{#1}
+	\ifthenelse{\equal{\thetmbandcntHead}{0}}{}{
+		\node[tmhead-marker, at=(tmbandcell-\thetmbandcntHead)] {};				
+	}
+\end{tikzpicture}
+}
+
+
