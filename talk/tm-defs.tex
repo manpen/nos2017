@@ -20,7 +20,7 @@
 		\ifthenelse{\equal{#3}{L}}{$\Leftarrow$}{\ifthenelse{\equal{#3}{R}}{$\Rightarrow$}{$\Downarrow$}}%
 	}%
 	%
-	\IfSubStr{\tmBandContent}{@#1@}
+	\IfSubStr{\tmBand}{@#1@}
 	{\ifthenelse{\tmTransOfCurrentState}{\textcolor{red}{\transLabel}}{\transLabel}}
 	{\transLabel}
 }
@@ -36,7 +36,7 @@
    \def\tmConditionalTrans{}
    {
 	   \renewcommand{\trans}[3]{%
-		   \IfSubStr{\tmBandContent}{@##1@}{\ifthenelse{\tmTransOfCurrentState}{\global\def\tmConditionalTrans{tm-trans-active}{}}{}}{}%
+		   \IfSubStr{\tmBand}{@##1@}{\ifthenelse{\tmTransOfCurrentState}{\global\def\tmConditionalTrans{tm-trans-active}{}}{}}{}%
 	   }%
 	   #3%
    }
@@ -62,10 +62,10 @@
 	\ifthenelse{\equal{#1}{B}}{$\mathbb B$}{#1}%
 }
 
-\newcommand\turingBandNodes[1]{
+\newcommand\turingBandNodes{
 	\setcounter{tmbandcnt}{0}
 	\setcounter{tmbandcnt}{0}
-	\turingBandHelp#1\relax\relax\relax\relax
+	\expandafter\turingBandHelp\tmBand\relax\relax\relax\relax
 }
 \def\turingBandHelp#1#2#3#4\relax{%
 	\ifx#1\relax{}\else{%
@@ -98,7 +98,7 @@
 \end{tikzpicture}
 }
 
-\newcommand{\tmBand}[1]{
+\newcommand{\tmDrawBand}{
 \begin{tikzpicture}[
 	node distance=0,
 	tmcell/.style={draw, minimum width=2em, minimum height=2em},
@@ -106,7 +106,7 @@
 	tmhead-marker/.style={draw, ultra thick, red, circle, minimum width=2.5em}
 ]
 	\node (tmbandcell-0) {};
-	\turingBandNodes{#1}
+	\turingBandNodes
 	\ifthenelse{\equal{\thetmbandcntHead}{0}}{}{
 		\node[tmhead-marker, at=(tmbandcell-\thetmbandcntHead)] {};				
 	}
@@ -114,3 +114,77 @@
 }
 
 
+%%%%%%%%%%%% TM Execution
+
+\def\tmMoveLeftHelp#1#2#3#4#5\relax{{%
+	\ifx#1@%
+		% Move left before start: Insert Blank Symbol
+		\xdef\tmNewBand{@B@#2#4#5}%
+	\else%
+		\ifx#4\relax%
+			% This is not possible in an input containing @
+			ILLEGAL INPUT%
+		\else
+			\ifx#2@%
+				\xdef\tmNewBand{\tmNewBand @#1@#3#5}%
+			\else%
+				\xdef\tmNewBand{\tmNewBand#1}%
+				\tmMoveLeftHelp#2#3#4#5\relax\relax%
+			\fi%
+		\fi%
+	\fi
+}}
+
+\def\tmMoveRightHelp#1@#2@#3#4\relax{{%
+	\ifx#3\relax
+		\xdef\tmNewBand{#1#2@B@}%
+	\else
+		\xdef\tmNewBand{#1#2@#3@#4}%
+	\fi
+}}
+
+\newcommand{\tmMoveLeft}{%
+	\def\tmNewBand{}%
+	\expandafter\tmMoveLeftHelp\tmBand\relax\relax\relax\relax\relax%
+	\xdef\tmBand{\tmNewBand}
+}
+
+\newcommand{\tmMoveRight}{%
+	\def\tmNewBand{}%
+	\expandafter\tmMoveRightHelp\tmBand\relax\relax\relax\relax\relax%
+	\xdef\tmBand{\tmNewBand}
+}
+
+
+\def\tmCurrentCharHelp#1@#2@#3\relax{\xdef\tmHeadChar{#2}}%
+\newcommand{\tmCurrentChar}{\expandafter\tmCurrentCharHelp\tmBand\relax}
+
+\def\tmWriteCharHelp#1@#2@#3\relax{\xdef\tmBand{#1@\tmCharToWrite@#3}}%
+\newcommand{\tmWriteChar}[1]{%
+	\def\tmCharToWrite{#1}%
+	\expandafter\tmWriteCharHelp\tmBand\relax%
+}
+
+\def\tmTrans#1#2#3#4#5\relax{
+	\if\tmHeadChar#1
+		\tmWriteChar#2
+		\if#3L
+			\tmMoveLeft
+		\else\if#3R
+			\tmMoveRight
+		\fi\fi
+		#4
+	\else
+		\if\relax\detokenize{#5}\relax\else
+			\tmTrans#5\relax
+		\fi
+	\fi
+}
+
+\def\tmShowBandHelp#1@#2@#3\relax{%
+	\texttt{#1\underline{#2}#3}%
+}
+
+\newcommand{\tmShowBand}{
+	\expandafter\tmShowBandHelp\tmBand\relax	
+}

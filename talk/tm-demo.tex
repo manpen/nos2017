@@ -1,10 +1,8 @@
-\newcommand{\turingI}[2]
+\newcommand{\turingI}[1]
 	% parameters:
 	%  1 key of current state
-	%  2 band contents
 {
 \newcommand{\tmStateCurrent}{#1}
-\newcommand{\tmBandContent}{#2}
 %
 \begin{center}
 	\scalebox{0.8}{%
@@ -13,7 +11,7 @@
 		\tmstate{first-minus}{Suche Minus}  {}{}
 		\tmstate{right-digit}{Rechte Ziffer}{above right=of first-minus}{}
 		\tmstate{left-digit} {Linke Ziffer} {below right=of first-minus}{}
-		\tmstate{clean}      {Aufräumen}    {below right=of right-digit}{}
+		\tmstate{clean-up}   {Aufräumen}    {below right=of right-digit}{}
 		
 		\tmstart{first-minus}
 		
@@ -22,55 +20,63 @@
 	
 		\tmtrans{right-digit}{right-digit}{\trans --R}{loop above}{}
 		\tmtrans{right-digit}{left-digit}{\trans 1-L}{bend right, below, left}{}
-		\tmtrans{right-digit}{clean}{\trans BBL}{bend left, below, above, sloped}{}
+		\tmtrans{right-digit}{clean-up}{\trans BBL}{bend left, below, above, sloped}{}
 		
 	
 		\tmtrans{left-digit}{left-digit}{\trans --L}{loop below}{}
 		\tmtrans{left-digit}{right-digit}{\trans 1-R}{bend right, below, right}{}
 	
-		\tmtrans{clean}{clean}{\trans -BL}{loop below}{}
+		\tmtrans{clean-up}{clean-up}{\trans -BL}{loop below}{}
 	%%%%%% END-TM: turingI %%%%%
 	\end{tmStates}}
 \end{center}
 
 \begin{center}
 	\scalebox{0.8}{%
-		\tmBand{#2}
+		\tmDrawBand
 	}
 \end{center}
 }
 
 
+\newcommand{\tmUpdateState}[1]{
+	\tmCurrentChar
+	\only<+>{\turingI{#1}}
+}
+
+\newcommand{\tmAfirstMinus}{
+	\tmUpdateState{first-minus}
+	\tmTrans%
+		11R\tmAfirstMinus%
+		00R\tmArightDigit%
+	\relax
+}
+
+\newcommand{\tmArightDigit}{
+	\tmUpdateState{right-digit}
+	\tmTrans%
+		00R\tmArightDigit%
+		10L\tmAleftDigit%
+		BBL\tmAcleanUp%
+	\relax
+}
+
+\newcommand{\tmAleftDigit}{
+	\tmUpdateState{left-digit}
+	\tmTrans%
+		00L\tmAleftDigit%
+		10R\tmArightDigit%
+	\relax
+}
+
+\newcommand{\tmAcleanUp}{
+	\tmUpdateState{clean-up}
+	\tmTrans%
+		0BL\tmAcleanUp%
+	\relax
+}
+
 \begin{frame}{Unäre Subtraktion}
-	\only<+>{\turingI{first-minus}{@1@11011}}
-	\only<+>{\turingI{first-minus}{1@1@1011}}
-	\only<+>{\turingI{first-minus}{11@1@011}}
-
-	\only<+>{\turingI{right-digit}{111@0@11}}
-	\only<+>{\turingI{right-digit}{1110@1@1}}
-
-	\only<+>{\turingI{left-digit} {111@0@01}}
-	\only<+>{\turingI{left-digit} {11@1@001}}
-
-	\only<+>{\turingI{right-digit}{110@0@01}}
-	\only<+>{\turingI{right-digit}{1100@0@1}}
-	\only<+>{\turingI{right-digit}{11000@1@}}
-
-	\only<+>{\turingI{left-digit} {1100@0@0}}
-	\only<+>{\turingI{left-digit} {110@0@00}}
-	\only<+>{\turingI{left-digit} {11@0@000}}
-	\only<+>{\turingI{left-digit} {1@1@0000}}
-
-	\only<+>{\turingI{right-digit}{10@0@000}}
-	\only<+>{\turingI{right-digit}{100@0@00}}
-	\only<+>{\turingI{right-digit}{1000@0@0}}
-	\only<+>{\turingI{right-digit}{10000@0@}}
-	\only<+>{\turingI{right-digit}{100000@B@}}
-
-	\only<+>{\turingI{clean}{10000@0@B}}
-	\only<+>{\turingI{clean}{1000@0@BB}}
-	\only<+>{\turingI{clean}{100@0@BBB}}
-	\only<+>{\turingI{clean}{10@0@BBBB}}
-	\only<+>{\turingI{clean}{1@0@BBBBB}}
-	\only<+>{\turingI{clean}{@1@BBBBBB}}
+    \def\tmBand{@1@11011}
+    \tmAfirstMinus
 \end{frame}
