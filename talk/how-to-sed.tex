@@ -1,0 +1,61 @@
+\newcommand{\bsl}{\textbackslash}
+
+\begin{frame}{sed - h\"a, was?}
+	sed steht f\"ur Stream Editor\\
+	also:\\
+	sed nimmt sich einen Textstrom und pfuscht in dem irgendwie rum:\\
+	Beispiel:\\
+	\texttt{s/2016/2017/} = Suche 2016 und ersetze es mit 2017\\
+	''NoS Vortrag 2016'' $\rightarrow$ ''NoS Vortrag 2017''\\
+\end{frame}
+
+
+%TODO: braucht noch: wenn ich nichts finde passiert nichts...
+\begin{frame}{Editwar mit sed}
+	''Manu ist der Beste!''\\
+	\quad\quad\texttt{s/der Beste/doof/}\\
+	''Manu ist doof!''\\
+	\quad\quad\texttt{s/Manu/Cyriax/}\\
+	''Cyriax ist doof!''\\
+	\quad\quad\texttt{s/ist doof/hat Manus Vortrag gekapert/}\\
+	''Cyriax hat Manus Vortrag gekapert!''\\
+	\quad\quad\texttt{s/(.*) hat (.*)s Vortrag gekapert/\bsl2 hat \bsl1s Vortrag gekapert/}\\
+	''Manu hat Cyriaxs Vortrag gekapert!''
+	\quad\quad\texttt{s/(.*) hat (.*)s Vortrag gekapert/\bsl2 hat \bsl1s Vortrag gekapert/}\\
+	''Cyriax hat Manus Vortrag gekapert!''
+\end{frame}
+
+\begin{frame}{Turingmaschine Idee}
+	Wir brauchen also:\\
+	1. Zustand\\
+	2. Zustands\"uberg\"ange\\
+	2. Band\\
+	3. Kopf\\
+\end{frame}
+
+\begin{frame}{Turingmaschine Zust\"ande}
+	%TODO tikz Bild NeuerZustand0 <-0A- AlterZustand -1B-> NeuerZustand1
+	Wir merken uns den Zustand und den Rest vom Wort:\\
+	''ZUSTAND:X''\\
+	Jeder \"Ubergang ist ein Suchen und Ersetzen:\\
+	\texttt{s/AlterZustand:0/NeuerZustand0:A/}\\
+	\texttt{s/AlterZustand:1/NeuerZustand1:B/}
+\end{frame}
+
+\begin{frame}{Turingmaschine BandKopfApparat}
+	%\begin{dummeIdee}
+	@ sieht aus wie ein Kopf...\\
+	%\end{dummeIdee}
+	Nach links gehen:\\
+	''Hallo W@elt'' $\rightarrow$ ''Hallo @Welt''\\
+	\texttt{s/(.*)(.)@(.*)/\bsl1@\bsl2\bsl3/}\\
+	e lesen und \"a schreiben:\\
+	''Hallo W@elt'' $\rightarrow$ ''Hallo W@\"alt''\\
+	\texttt{s/(.*)@e(.*)/\bsl1@\"a\bsl2/}\\
+	Beides Zusammen:
+	''Hallo W@elt'' $\rightarrow$ ''Hallo @W\"alt''\\
+	\texttt{s/(.*)(.)@e(.*)/\bsl1@\bsl2\"a\bsl3/}\\
+
+
+\end{frame}
+
