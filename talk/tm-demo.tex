@@ -1,82 +1,45 @@
-\newcommand{\turingI}[1]
-	% parameters:
-	%  1 key of current state
-{
-\newcommand{\tmStateCurrent}{#1}
-%
-\begin{center}
-	\scalebox{0.8}{%
-	\begin{tmStates}
-	%%%%%% BEGIN-TM: turingI, B111011B %%%%%
-		\tmstate{first-minus}{Suche Minus}  {}{}
-		\tmstate{right-digit}{Rechte Ziffer}{above right=of first-minus}{}
-		\tmstate{left-digit} {Linke Ziffer} {below right=of first-minus}{}
-		\tmstate{clean-up}   {Aufräumen}    {below right=of right-digit}{}
-		
-		\tmstart{first-minus}
-		
-		\tmtrans{first-minus}{first-minus}{\trans 11R}{loop below}{}
-		\tmtrans{first-minus}{right-digit.west}{\trans --R}{above,sloped, bend left}{}
+\def\turingAStateDef{
+%%%%%% BEGIN-TM: turingI, B111-11B %%%%%
+	\tmstate{firstMinus}{Suche Minus}  {}{}
+	\tmstate{rightDigit}{Rechte Ziffer}{above right=of firstMinus}{}
+	\tmstate{leftDigit} {Linke Ziffer} {below right=of firstMinus}{}
+	\tmstate{cleanUp}   {Aufräumen}    {below right=of rightDigit}{}
 	
-		\tmtrans{right-digit}{right-digit}{\trans --R}{loop above}{}
-		\tmtrans{right-digit}{left-digit}{\trans 1-L}{bend right, below, left}{}
-		\tmtrans{right-digit}{clean-up}{\trans BBL}{bend left, below, above, sloped}{}
+	\tmstart{firstMinus}
+	
+	\tmtrans{firstMinus}{firstMinus}{\trans 11R }{loop below}{}
+	\tmtrans{firstMinus.east}{rightDigit.west}{\trans --R}{above,sloped}{}
+	
+	\tmtrans{rightDigit}{rightDigit}{\trans --R}{loop above}{}
+	\tmtrans{rightDigit}{leftDigit}{\trans 1-L}{bend right, below, left}{}
+	\tmtrans{rightDigit.east}{cleanUp.west}{\trans BBL}{above, sloped}{}
+	
+	
+	\tmtrans{leftDigit}{leftDigit}{\trans --L}{loop below}{}
+	\tmtrans{leftDigit}{rightDigit}{\trans 1-R}{bend right, below, right}{}
+	
+	\tmtrans{cleanUp}{cleanUp}{\trans -BL}{loop below}{}
+%%%%%% END-TM: turingI %%%%%
+}
+
+\newcommand{\tmADraw}[1]{
+	\newcommand{\tmStateCurrent}{#1}
+
+	\begin{center}
+		\scalebox{0.8}{
+			\tmDrawStates{\turingAStateDef}
+		}			
 		
-	
-		\tmtrans{left-digit}{left-digit}{\trans --L}{loop below}{}
-		\tmtrans{left-digit}{right-digit}{\trans 1-R}{bend right, below, right}{}
-	
-		\tmtrans{clean-up}{clean-up}{\trans -BL}{loop below}{}
-	%%%%%% END-TM: turingI %%%%%
-	\end{tmStates}}
-\end{center}
-
-\begin{center}
-	\scalebox{0.8}{%
-		\tmDrawBand
-	}
-\end{center}
+		\scalebox{0.8}{
+			\tmDrawBand
+		}
+	\end{center}
 }
 
 
-\newcommand{\tmUpdateState}[1]{
-	\tmCurrentChar
-	\only<+>{\turingI{#1}}
-}
-
-\newcommand{\tmAfirstMinus}{
-	\tmUpdateState{first-minus}
-	\tmTrans%
-		11R\tmAfirstMinus%
-		00R\tmArightDigit%
-	\relax
-}
-
-\newcommand{\tmArightDigit}{
-	\tmUpdateState{right-digit}
-	\tmTrans%
-		00R\tmArightDigit%
-		10L\tmAleftDigit%
-		BBL\tmAcleanUp%
-	\relax
-}
-
-\newcommand{\tmAleftDigit}{
-	\tmUpdateState{left-digit}
-	\tmTrans%
-		00L\tmAleftDigit%
-		10R\tmArightDigit%
-	\relax
-}
-
-\newcommand{\tmAcleanUp}{
-	\tmUpdateState{clean-up}
-	\tmTrans%
-		0BL\tmAcleanUp%
-	\relax
-}
+\newcommand{\tmACallback}[1]{\only<+>{\tmADraw{#1}}}
+\tmSetup{A}{\turingAStateDef}
 
 \begin{frame}{Unäre Subtraktion}
-    \def\tmBand{@1@11011}
-    \tmAfirstMinus
+	\tmExecute{A}{111-11B}{\tmACallback}
 \end{frame}
