@@ -26,20 +26,29 @@
 	\newcommand{\tmStateCurrent}{#1}
 
 	\begin{center}
-		\scalebox{0.8}{
+		\scalebox{0.9}{
 			\tmDrawStates{\turingAStateDef}
-		}			
-		
-		\scalebox{0.8}{
-			\tmDrawBand
 		}
+		
+		\vspace{2em}
+		
+		\tmDrawBand
 	\end{center}
+	
+	\begin{tikzpicture}[remember picture, overlay]
+		\foreach \i in {1,...,10} {
+			\node[tmCell, tmCellBlank] at ($(tmbandcell0) - (\i*\cellSize,0) + (\cellSize, 0)$) {\tmBlankSym};
+			\node[tmCell, tmCellBlank] at ($(tmbandcell0) + (\i*\cellSize,0) + (\thetmBandCnt*\cellSize, 0)$) {\tmBlankSym};
+		}
+		
+		\tmDrawGrid{-10}{20}
+	\end{tikzpicture}
 }
 
 
 \newcommand{\tmACallback}[1]{\only<+>{\tmADraw{#1}}}
 \tmSetup{A}{\turingAStateDef}
 
-\begin{frame}{Unäre Subtraktion}
+\begin{frame}{Subtraktion: $3 - 2 = ?$}
 	\tmExecute{A}{111-11B}{\tmACallback}
 \end{frame}
