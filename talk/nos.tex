@@ -25,7 +25,7 @@
 
 \usepackage{soul}
 
-\graphicspath{{./figures/}}
+\graphicspath{{./images/}}
 
 \tikzset{onslide/.code args={<#1>#2}{%
     \only<#1>{\pgfkeysalso{#2}} % \pgfkeysalso doesn't change the path
@@ -61,7 +61,7 @@
 \begin{document}
 \title{
 	Und womit rechnest du so? \\[-0.5em]
-	\textcolor{dunkelgrau}{\small Programming -- How (not) to do it}
+	\textcolor{dunkelgrau}{\small \emph{mit Folien von Cyriax und Manuel}}
 }
 \author{
 	Jonathan Cyriax Brast\\
@@ -74,6 +74,9 @@
 \goethccBgTitel
 \begin{frame}
   \titlepage
+  \begin{tikzpicture}[overlay]
+	  \node[anchor=south east, xshift=-0.08\textwidth, yshift=0.05\textheight, at=(current page.south east)] {\includegraphics[width=0.15\textwidth]{cs.pdf}};
+  \end{tikzpicture}
 \end{frame}
 }
 \addtocounter{framenumber}{-1}
