@@ -43,8 +43,18 @@
  	\ifthenelse{#1}{\pgfkeysalso{#2}}{}%
 }}
  		
+\def\cellSize{27pt}
+\def\tmBlankSym{\ensuremath{\mathbb B}}
+		
+\tikzset{tmCell/.style={font={\Large\tt}, minimum height=\cellSize, minimum width=\cellSize}}
+\tikzset{tmCellActive/.style={tmCell}}
+\tikzset{tmCellBlank/.style={dunkelgrau!50, fill=sandgrau}}
+\tikzset{tmHeadMarker/.style={circle, draw, ultra thick, emorot, minimum width=0.9*\cellSize, minimum height=0.9*\cellSize}}
 
-\newcommand{\tikzanchor}[2]{\tikz[overlay, remember picture]{\node[anchor=text, inner sep=0] (#1) {\phantom{Ig}};}#2}
+ 		
+ 		
+
+\newcommand{\tikzanchor}[1]{\tikz[overlay, remember picture]{\node[anchor=text, inner sep=0] (#1) {\phantom{Ig}};}}
 
 \input{tm-defs}
 

@@ -61,14 +61,14 @@
             	\ifthenelse{\equal{####3}{L}}{%
             		\def\tmDrawTransDir{$\Leftarrow$}%
             	}{\ifthenelse{\equal{####3}{R}}{%
-            		\def\tmDrawTransDir{$\Leftarrow$}%
+            		\def\tmDrawTransDir{$\Rightarrow$}%
             	}{%
 	            	\def\tmDrawTransDir{$\Downarrow$}%
 	            }}%
 
 				% Make active transition label red, remainder black
 				\ifthenelse{\equal{\tmStateCurrent}{\tmDrawSourceBase} \AND \equal{\tmHeadChar}{####1}}{
-					\edef\transLabelColor{red}
+					\edef\transLabelColor{emorot}
 				}{
 					\edef\transLabelColor{black}
 				}
@@ -106,10 +106,10 @@
 		node distance = 4em and 15em,
 		on grid,
 		tm-state/.style={draw, minimum width=6em},
-		tm-state-active/.style={fill=red!50},
+		tm-state-active/.style={fill=emorot!50},
 		tm-state-next/.style={blue},
 		tm-trans/.style={draw, ->, shorten >=2pt, thick, auto},
-		tm-trans-active/.style={red},
+		tm-trans-active/.style={emorot},
 		loop above/.style={looseness=8, out=120, in=60},
 		loop below/.style={looseness=8, out=300, in=240}
 	]
@@ -138,12 +138,12 @@
 		\ifx##1\relax{}\else{%
 			\stepcounter{tmBandCnt}
 			\ifthenelse{\equal{##1}{@}}{%
-				\node[tmcell-active, right=of tmbandcell-\the\decreasedCounter{tmBandCnt}] (tmbandcell-\thetmBandCnt) {\tmbandCellCaption##2};
+				\node[tmCellActive, onif={<\equal{##2}{B}>tmCellBlank}] (tmbandcell\thetmBandCnt) at ($(tmbandcell0) + (\thetmBandCnt*\cellSize,0)$) {\tmbandCellCaption##2};
 				\setcounter{tmBandCntHead}{\thetmBandCnt}%
 				\turingBandHelp##4\relax\relax\relax\relax%		
 			}{%
-			\node[tmcell, right=of tmbandcell-\the\decreasedCounter{tmBandCnt}] (tmbandcell-\thetmBandCnt) {\tmbandCellCaption##1};
-			\turingBandHelp##2##3##4\relax\relax\relax%
+				\node[tmCell, onif={<\equal{##1}{B}>tmCellBlank}] (tmbandcell\thetmBandCnt) at ($(tmbandcell0) + (\thetmBandCnt*\cellSize,0)$) {\tmbandCellCaption##1};
+				\turingBandHelp##2##3##4\relax\relax\relax%
 		}%
 	}
 	\fi%
@@ -151,22 +151,30 @@
 	
 	
 	
-	\begin{tikzpicture}[
-		node distance=0,
-		tmcell/.style={draw, minimum width=2em, minimum height=2em},
-		tmcell-active/.style={tmcell},
-		tmhead-marker/.style={draw, ultra thick, red, circle, minimum width=1.5em}
-	]
-	\node (tmbandcell-0) {};
-
-	\setcounter{tmBandCnt}{0}
-	\setcounter{tmBandCnt}{0}
-	\expandafter\turingBandHelp\tmBand\relax\relax\relax\relax
-
-	\ifthenelse{\equal{\thetmBandCntHead}{0}}{}{
-		\node[tmhead-marker, at=(tmbandcell-\thetmBandCntHead)] {};				
-	}
+	\begin{tikzpicture}[remember picture]
+		\node[tmCell] (tmbandcell0) {};
+	
+		\setcounter{tmBandCnt}{0}
+		\setcounter{tmBandCnt}{0}
+		\expandafter\turingBandHelp\tmBand\relax\relax\relax\relax
+	
+		\ifthenelse{\equal{\thetmBandCntHead}{0}}{}{
+			\node[tmHeadMarker, at=(tmbandcell\thetmBandCntHead)] (tmheadmarker) {};				
+		}
 	\end{tikzpicture}
+}
+
+\newcommand{\tmDrawGrid}[2]{
+	\foreach \i in {#1, ..., #2} {
+		\path[draw] ($(tmbandcell0.north west)+(\i*\cellSize, 0)$) 
+		to ($(tmbandcell0.south west)+(\i*\cellSize, 0)$);
+	}
+	
+	\path[draw] ($(tmbandcell0.north west)+(#1*\cellSize, 0)$) 
+	to ($(tmbandcell0.north west)+(#2*\cellSize, 0)$);
+	
+	\path[draw] ($(tmbandcell0.south west)+(#1*\cellSize, 0)$) 
+	to ($(tmbandcell0.south west)+(#2*\cellSize, 0)$);
 }
 
 
