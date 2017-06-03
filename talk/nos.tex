@@ -4,9 +4,10 @@
 \usepackage{color, colortbl}
 
 \usepackage[USenglish]{babel}
-\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{amsmath,amsfonts,amssymb,textcomp}
 \usepackage{graphicx}
 \usepackage{pdfpages}
+
 
 \usepackage{latexsym}
 \usepackage{xspace}
@@ -15,33 +16,33 @@
 
 \usepackage{intcalc}
 
-\usepackage{turing}
+\usepackage{siunitx}
+\input{turing.sty}
 
-%TODO: Cyriax should install packages...
-%\usepackage{siunitx}
-%\sisetup{locale = DE}
+\sisetup{locale = DE}
 
 \usepackage{xstring}
 \usepackage{tikz}
 \usepackage{pgf}
+\usepackage{mathtools,pgfplots}
 \usetikzlibrary{calc}   
 \usetikzlibrary{positioning}
 \usetikzlibrary{automata}
 \usetikzlibrary{arrows}   
-
 \usepackage{soul}
-
 \graphicspath{{./images/}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % We gonna write a lot of unary numbers; let TeX do the work for us
-\newcommand{\unum}[1]{%	
+\newcommand{\unum}[1]{
+	\ifthenelse{\equal{0}{#1}}{}{
+	\ifthenelse{\equal{1}{#1}}{1}{%
 	1%
-	\foreach \i in {\intcalcDec{#1},...,1} {%
-		\ifthenelse{\equal{\intcalcMod{\i}{3}}{0}}{'}{}%<-- this is the sep
+	\foreach \unumj in {\intcalcDec{#1},...,1} {%
+		\ifthenelse{\equal{\intcalcMod{\unumj}{3}}{0}}{\textquoteleft}{}%<-- this is the sep
 		1%<-- this is the actual digit
 	}%
-}
+}}}
 \newcommand{\ttunum}[1]{\ensuremath{\mathtt{\unum{#1}}}}
 
 
