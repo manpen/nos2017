@@ -13,14 +13,14 @@
         % tikz position
 
         \node[
-            tm-state,
-            onif={<\equal{##1}{\tmStateCurrent}>tm-state-active},
+            tmState,
+            onif={<\equal{##1}{\tmStateCurrent}>tmStateActive},
             ##3
         ] (##1) ##4 {##2};
     }
 
     \def\tmstart##1{
-        \path[tm-trans]  ($(##1.west)-(1.5em, 0)$) to ++(1.5em, 0);
+        \path[tmTrans]  ($(##1.west)-(1.5em, 0)$) to ++(1.5em, 0);
     }
 
     \def\tmtrans##1##2##3##4##5{{
@@ -44,7 +44,7 @@
 			% via the local version of \trans!
 		    \def\trans####1####2####3{%
 	    		\ifthenelse{\equal{\tmStateCurrent}{\tmDrawSourceBase} \AND \equal{\tmHeadChar}{####1}}{%
-	    			\gdef\tmDrawTransActiveEdge{tm-trans-active}%
+	    			\gdef\tmDrawTransActiveEdge{tmTransActive}%
 	    		}{}%
 		    }%
 			##3
@@ -95,7 +95,7 @@
         }
         
 
-        \path[tm-trans, \tmDrawTransActiveEdge, ##4] 
+        \path[tmTrans, \tmDrawTransActiveEdge, ##4] 
 	        (##1) to 	% source
 	        node[align=center, ##5] {\tmDrawTransLabel} % label
 	        (##2) % target
@@ -104,14 +104,7 @@
 
 	\begin{tikzpicture}[
 		node distance = 4em and 15em,
-		on grid,
-		tm-state/.style={draw, minimum width=6em},
-		tm-state-active/.style={fill=emorot!50},
-		tm-state-next/.style={blue},
-		tm-trans/.style={draw, ->, shorten >=2pt, thick, auto},
-		tm-trans-active/.style={emorot},
-		loop above/.style={looseness=8, out=120, in=60},
-		loop below/.style={looseness=8, out=300, in=240}
+		on grid
 	]
 		#1
     \end{tikzpicture}
