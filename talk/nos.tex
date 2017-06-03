@@ -44,6 +44,9 @@
 }
 \newcommand{\ttunum}[1]{\ensuremath{\mathtt{\unum{#1}}}}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% General purpose tikz attributes for condition formating
 \tikzset{onslide/.code args={<#1>#2}{%
     \only<#1>{\pgfkeysalso{#2}} % \pgfkeysalso doesn't change the path
 }}
@@ -59,7 +62,12 @@
 \tikzset{onif/.code args={<#1>#2}{%
  	\ifthenelse{#1}{\pgfkeysalso{#2}}{}%
 }}
- 		
+
+\newcommand{\tikzanchor}[1]{\tikz[overlay, remember picture]{\node[anchor=text, inner sep=0] (#1) {\phantom{Ig}};}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Formating of our Turing Machines 		
 \def\cellSize{27pt}
 \def\tmBlankSym{\ensuremath{\mathbb B}}
 		
