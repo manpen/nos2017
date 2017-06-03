@@ -16,8 +16,8 @@
 
 		\uncover<6->{
 			\begin{tikzpicture}[remember picture]
-				\node[draw] (stateA) {Zustand A};
-				\node[draw, anchor=west] (stateB) at ($(stateA.east) + (5,0)$)  {Zustand B};
+				\node[tmState, draw] (stateA) {Zustand A};
+				\node[tmState, draw, anchor=west] (stateB) at ($(stateA.east) + (5,0)$)  {Zustand B};
 				
 				\path[draw, ->, thick, bend left=10, shorten >=5pt] (stateA) to node[above] {\tikzanchor{transAnchor} \texttt 0 zu \texttt 1, $\Rightarrow$} (stateB);
 				\path[draw, ->, thick, bend left=10, shorten >=5pt] (stateB) to node[below,align=left] {\texttt 0 zu \texttt 0, $\Leftarrow$ \\ \texttt 1 zu \texttt 1, $\Leftarrow$} (stateA);
