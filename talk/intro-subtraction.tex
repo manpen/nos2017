@@ -1,0 +1,149 @@
+\begin{frame}{Subtraktion}
+	\begin{center}
+		\Huge
+
+		\only<+>{\bf{\textcolor{emorot}{Selbsttest}}}
+		\only<+>{$7-3=\underline{\phantom4}$}
+		\only<+>{$7-3=\underline{4}$}
+		
+		\only<+>{\bf{\textcolor{emorot}{Und noch einer \ldots}}}
+		\only<+>{$123-45=\underline{\phantom{78}}$}
+		\only<+>{$123-45=\underline{78}$}
+	\end{center}
+\end{frame}
+
+\begin{frame}{Unäre Zahlen -- römisch für Arme}
+	\Large
+	\begin{center}
+		Wir stellen die \textcolor{goetheblau}{Zahl $x$} durch  \textcolor{emorot}{$x$ Einsen} dar.
+	\end{center}
+
+
+	\begin{center}
+		\begin{tikzpicture}[
+			node distance=0,
+			dnum/.style={align=right, text width=2em},
+			unum/.style={align=right, text width=7em}
+		]
+			\node (a0) {};
+			\foreach \i in {1, ..., 5} {
+				\node[dnum, below=of a\intcalcDec\i] (a\i) {$\textcolor{goetheblau}{\i}_{10}$};
+				\node[right=of a\i] (b\i) {$=$};
+				\node[unum, right=of b\i] (c\i) {$\textcolor{emorot}{\ttunum{\i}}_1$};
+	
+				\node[dnum, right=2em of c\i] (d\i) {$\textcolor{goetheblau}{\intcalcAdd5\i}_{10}$};
+				\node[right=of d\i] (e\i) {$=$};
+				\node[unum, right=of e\i] (f\i) {$\textcolor{emorot}{\ttunum{\intcalcAdd5\i}}_1$};
+			}
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+\begin{frame}{Wie beschreiben wir unäre Subtraktion?}
+	\begin{center}
+		{
+			\Large
+			$\textcolor{goetheblau}{a} - \textcolor{emorot}{b} = \textcolor{orange}{c}$
+		}
+		
+		\vspace{2em}
+		
+		\scalebox{1.3}{
+			\begin{tikzpicture}[
+				number/.style={text width=3.8em, align=right, anchor=north west, inner sep=0.1em, minimum height=1.5em, orange},
+				header/.style={number, font={\bf}}
+			]
+				\def\sx{4em}
+				\def\sy{1.5em}
+	
+				\node[fill=sandgrau, anchor=north west,  minimum width=7.5*\sx, minimum height=\sy, inner sep=0] at (0,0)  {};
+				\node[fill=sandgrau, anchor=north west, minimum width=\sx, minimum height=7.5*\sy, inner sep=0] at (0,0)  {};
+			
+				\foreach \x in {1, ..., 5} {
+					\node[header, goetheblau] at (\x*\sx, 0) {$\mathbf{\unum{\x}}$};
+					\node[header, emorot] at (0, -\x*\sy) {$\mathbf{\unum{\x}}$};
+	
+					\node[header, goetheblau] at (6*\sx, 0) {$\cdots$};
+					\node[header, emorot] at (0, -6*\sy) {$\vdots$\ \ \phantom.};
+	
+					\node[number] at (6*\sx, -\x*\sy) {$\cdots$};
+					\node[number] at (\x*\sx, -6*\sy) {$\vdots$};
+	
+					
+					\foreach \y in {1, ..., 5} {
+						\node[number] at (\x*\sx, -\y*\sy) {\ifthenelse{\equal{\intcalcCmp\x\y}{-1}}{--}{\ttunum{\intcalcSub\x\y}}};
+					}
+				}
+				
+				\node[header] at (6*\sx, -6*\sy) {$\ddots$};
+			\end{tikzpicture}
+		}
+	\end{center}
+	
+	\pause
+	
+	\begin{tikzpicture}[overlay]
+		\node[draw, radius=0.5em, rounded corners=1em, emorot, fill=white, opacity=0.8, inner sep=2em] at (current page) {\phantom{\Huge Nicht praktikabel für große Zahlen!}};
+		\node[emorot, inner sep=2em] at (current page) {\Huge Nicht praktikabel für große Zahlen!};
+	\end{tikzpicture}
+\end{frame}
+
+\newcommand{\removeDigit}[1]{%
+	\only<-\intcalcDec{#1}>{1}%
+	\only<#1>{\textcolor{emorot}{\underline 1}}%
+}
+
+\begin{frame}{Wir brauchen einen Algorithmus}
+	\begin{columns}
+		\begin{column}{0.7\textwidth}
+			\Huge
+			$\textcolor{goetheblau}{a} - \textcolor{emorot}{b} = \textcolor{orange}{c}$
+
+			\Large
+			\setbeamertemplate{enumerate items}[default]
+			\begin{enumerate}
+				\item
+					\tikzanchor{step1}%
+					\textbf{Wenn} \textcolor{emorot}{$b$} keine Ziffer mehr hat,\\
+					\tikzanchor{step1a}
+					\textbf{dann} \textcolor{orange}{\textbf{antworte} $c \gets a$} und \textbf{halte}
+
+				
+				\item
+					\tikzanchor{step2}%
+					\texttt{Entferne} letzte Ziffer von \textcolor{goetheblau}{a}\\
+					\texttt{Entferne} letzte eine Ziffer von \textcolor{emorot}{b}
+				
+				\item 
+					\tikzanchor{step3}%
+					\textbf{Springe} zu \textcolor{goetheblau}{1.}
+			\end{enumerate}
+		\end{column}%
+		
+		\begin{column}{0.2\textwidth}
+			\Huge
+
+			$\textcolor{goetheblau}{a}$: \hfill 1\removeDigit6\removeDigit3\\
+			$\textcolor{emorot}{b}$: \hfill \removeDigit6\removeDigit3\\
+			$\textcolor{orange}{c}$: \hfill \only<-8>{?}\only<9>{\textcolor{emorot}{1}}
+			
+			\uncover<9>{\begin{center}
+					Stop
+			\end{center}}
+			
+		\end{column}
+	\end{columns}
+	
+	\begin{tikzpicture}[
+		overlay, remember picture,
+		prog counter/.style={emorot, <-, ultra thick}
+	]
+		\path[prog counter, onslide={<2,5,8>draw}] ($(step1)+(-2.5em,0)$) to ++(-2em, 0);
+		\path[prog counter, onslide={<9>draw}]     ($(step1a)+(-2.5em,0)$) to ++(-2em, 0);		
+		\path[prog counter, onslide={<3,6>draw}]   ($(step2)+(-2.5em,0)$) to ++(-2em, 0);
+		\path[prog counter, onslide={<4,7>draw}]   ($(step3)+(-2.5em,0)$) to ++(-2em, 0);
+	
+	\end{tikzpicture}
+	
+\end{frame}
+
