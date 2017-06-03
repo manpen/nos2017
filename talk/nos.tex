@@ -13,6 +13,7 @@
 
 \usepackage{aurical}
 
+\usepackage{intcalc}
 
 \usepackage{turing}
 
@@ -31,6 +32,17 @@
 \usepackage{soul}
 
 \graphicspath{{./images/}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% We gonna write a lot of unary numbers; let TeX do the work for us
+\newcommand{\unum}[1]{%	
+	1%
+	\foreach \i in {\intcalcDec{#1},...,1} {%
+		\ifthenelse{\equal{\intcalcMod{\i}{3}}{0}}{'}{}%<-- this is the sep
+		1%<-- this is the actual digit
+	}%
+}
+\newcommand{\ttunum}[1]{\ensuremath{\mathtt{\unum{#1}}}}
 
 \tikzset{onslide/.code args={<#1>#2}{%
     \only<#1>{\pgfkeysalso{#2}} % \pgfkeysalso doesn't change the path
