@@ -4,28 +4,53 @@
 \usepackage{color, colortbl}
 
 \usepackage[USenglish]{babel}
-\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{amsmath,amsfonts,amssymb,textcomp}
 \usepackage{graphicx}
 \usepackage{pdfpages}
+
 
 \usepackage{latexsym}
 \usepackage{xspace}
 
-%TODO: Cyriax should install packages...
-%\usepackage{siunitx}
-%\sisetup{locale = DE}
+\usepackage{aurical}
+
+\usepackage{intcalc}
+
+\usepackage{siunitx}
+\input{turing}
+
+\sisetup{locale = DE}
 
 \usepackage{xstring}
 \usepackage{tikz}
 \usepackage{pgf}
+\usepackage{mathtools,pgfplots}
 \usetikzlibrary{calc}   
 \usetikzlibrary{positioning}
 \usetikzlibrary{automata}
+\usetikzlibrary{arrows}   
+\usetikzlibrary{backgrounds}
 
 \usepackage{soul}
+\graphicspath{{./images/}}
+\usepackage{listings}
 
-\graphicspath{{./figures/}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% We gonna write a lot of unary numbers; let TeX do the work for us
+\newcommand{\unum}[1]{
+	\ifthenelse{\equal{0}{#1}}{}{
+	\ifthenelse{\equal{1}{#1}}{1}{%
+	1%
+	\foreach \unumj in {\intcalcDec{#1},...,1} {%
+		\ifthenelse{\equal{\intcalcMod{\unumj}{3}}{0}}{\textquoteleft}{}%<-- this is the sep
+		1%<-- this is the actual digit
+	}%
+}}}
+\newcommand{\ttunum}[1]{\ensuremath{\mathtt{\unum{#1}}}}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% General purpose tikz attributes for condition formating
 \tikzset{onslide/.code args={<#1>#2}{%
     \only<#1>{\pgfkeysalso{#2}} % \pgfkeysalso doesn't change the path
 }}
@@ -41,16 +66,34 @@
 \tikzset{onif/.code args={<#1>#2}{%
  	\ifthenelse{#1}{\pgfkeysalso{#2}}{}%
 }}
+
+\newcommand{\tikzanchor}[1]{\tikz[overlay, remember picture]{\node[anchor=text, inner sep=0] (#1) {\phantom{Ig}};}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Formating of our Turing Machines 		
+\def\cellSize{27pt}
+\def\tmBlankSym{\ensuremath{\mathbb B}}
+		
+\tikzset{tmCell/.style={font={\Large\tt}, minimum height=\cellSize, minimum width=\cellSize}}
+\tikzset{tmCellActive/.style={tmCell}}
+\tikzset{tmCellBlank/.style={dunkelgrau!50, fill=sandgrau}}
+\tikzset{tmHeadMarker/.style={circle, draw, ultra thick, emorot, minimum width=0.9*\cellSize, minimum height=0.9*\cellSize}}
+
+\tikzset{tmState/.style={draw, minimum width=6em, rounded corners=0.4em}}
+\tikzset{tmStateActive/.style={fill=emorot!50}}
+\tikzset{tmTrans/.style={draw, ->, shorten >=2pt, thick, auto}}
+\tikzset{tmTransActive/.style={emorot}}
+
+
+\tikzset{loop above/.style={looseness=8, out=120, in=60}}
+\tikzset{loop below/.style={looseness=8, out=300, in=240}}
  		
-
-\newcommand{\tikzanchor}[2]{\tikz[overlay, remember picture]{\node[anchor=text, inner sep=0] (#1) {\phantom{Ig}};}#2}
-
-\input{tm-defs}
 
 \begin{document}
 \title{
 	Und womit rechnest du so? \\[-0.5em]
-	\textcolor{dunkelgrau}{\small Programming -- How (not) to do it}
+	\textcolor{dunkelgrau}{\small \emph{mit Folien von Cyriax und Manuel}}
 }
 \author{
 	Jonathan Cyriax Brast\\
@@ -63,6 +106,9 @@
 \goethccBgTitel
 \begin{frame}
   \titlepage
+  \begin{tikzpicture}[overlay]
+	  \node[anchor=south east, xshift=-0.08\textwidth, yshift=0.05\textheight, at=(current page.south east)] {\includegraphics[width=0.15\textwidth]{cs.pdf}};
+  \end{tikzpicture}
 \end{frame}
 }
 \addtocounter{framenumber}{-1}
@@ -72,11 +118,14 @@
 
 %%%%%%%%%%%%%
 
-
-\input{tm-demo}
-\input{adding-in-binary}
+\input{intro}
+\input{intro-subtraction}
+\input{tm-intro}
+\input{tm-subtract-unary}
 \input{how-to-sed}
+\input{tm-listing}
 
+\input{explosion}
 
 
 

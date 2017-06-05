@@ -1,0 +1,319 @@
+%%%%%%%%%%%% Turing Machine State Diagram
+\def\tmKeyBasename#1#2.#3\relax{\xdef#1{#2}}
+
+\newcommand{\tmDrawStates}[1]{
+	% set \tmHeadChar
+	\tmCurrentChar
+	
+	
+    \def\tmstate##1##2##3##4{
+        % 1 key
+        % 2 label
+        % tikz options
+        % tikz position
+
+        \node[
+            tmState,
+            onif={<\equal{##1}{\tmStateCurrent}>tmStateActive},
+            ##3
+        ] (##1) ##4 {##2};
+    }
+
+    \def\tmstart##1{
+        \path[tmTrans]  ($(##1.west)-(1.5em, 0)$) to ++(1.5em, 0);
+    }
+
+    \def\tmtrans##1##2##3##4##5{{
+        % 1 current state
+        % 2 next state
+        % 3 instruction
+        % 4 format path
+        % 5 format label
+
+		% Disable the newline comannd (only for this scope, though)
+		\renewcommand{\\}{}
+		
+		\tmKeyBasename\tmDrawSourceBase##1.\relax		
+		\tmKeyBasename\tmDrawTargetBase##2.\relax		
+
+		% First find out if this is an active edge
+        \def\tmDrawTransActiveEdge{}
+        {
+			% Parameter ##3 contains a list of \trans commands;
+			% that's all we are interested in. Gather the infos
+			% via the local version of \trans!
+		    \def\trans####1####2####3{%
+	    		\ifthenelse{\equal{\tmStateCurrent}{\tmDrawSourceBase} \AND \equal{\tmHeadChar}{####1}}{%
+	    			\gdef\tmDrawTransActiveEdge{tmTransActive}%
+	    		}{}%
+		    }%
+			##3
+        }
+        
+		% Build the label and store it in the following macro        
+        \def\tmDrawTransLabel{}
+	    {
+	        % Parameter ##3 contains a list of \trans commands;
+			% that's all we are interested in. Gather the infos
+			% via the local version of \trans!
+            \def\trans####1####2####3{%
+            	% Human readable direction
+            	\ifthenelse{\equal{####3}{L}}{%
+            		\def\tmDrawTransDir{$\Leftarrow$}%
+            	}{\ifthenelse{\equal{####3}{R}}{%
+            		\def\tmDrawTransDir{$\Rightarrow$}%
+            	}{%
+	            	\def\tmDrawTransDir{$\Downarrow$}%
+	            }}%
+
+				% Make active transition label red, remainder black
+				\ifthenelse{\equal{\tmStateCurrent}{\tmDrawSourceBase} \AND \equal{\tmHeadChar}{####1}}{
+					\edef\transLabelColor{emorot}
+				}{
+					\edef\transLabelColor{black}
+				}
+
+				% Short-Cut             	
+            	\def\transLabel{%
+            		\noexpand\textcolor{\transLabelColor}{%
+	            		\noexpand\texttt{####1} zu \noexpand\texttt{####2}, \tmDrawTransDir%
+	            	}%
+            	}%
+
+				\xdef\tmDrawTransLabel{
+					\unexpanded\expandafter{\tmDrawTransLabel}%
+					\tmDrawTransLabelNewLine % Empty in first iteration, otherwise \\
+					\transLabel
+		    	}%
+		    	
+			    % Seperate several transition with newline
+		    	\def\tmDrawTransLabelNewLine{\noexpand\\}
+            }%
+
+	        \def\tmDrawTransLabelNewLine{}
+            ##3
+        }
+        
+
+        \path[tmTrans, \tmDrawTransActiveEdge, ##4] 
+	        (##1) to 	% source
+	        node[align=center, ##5] {\tmDrawTransLabel} % label
+	        (##2) % target
+	    ;
+    }}
+
+	\begin{tikzpicture}[
+		node distance = 4em and 15em,
+		on grid
+	]
+		#1
+    \end{tikzpicture}
+}
+
+
+
+%%%%%%%%%%%% Turing Machine Band Diagram and Band Helpers
+\def\tmCurrentCharHelp#1@#2@#3\relax{\xdef\tmHeadChar{#2}}%
+\newcommand{\tmCurrentChar}{\expandafter\tmCurrentCharHelp\tmBand\relax}
+
+
+\newcounter{tmBandCnt}
+\newcounter{tmBandCntHead}
+
+\newcommand{\tmDrawBand}{
+	\def\decreasedCounter##1{\numexpr\value{##1} - 1\relax}
+	
+	\def\tmbandCellCaption##1{%
+		\ifthenelse{\equal{##1}{B}}{$\mathbb B$}{##1}%
+	}	
+	
+	\def\turingBandHelp##1##2##3##4\relax{%
+		\ifx##1\relax{}\else{%
+			\stepcounter{tmBandCnt}
+			\ifthenelse{\equal{##1}{@}}{%
+				\node[tmCellActive, onif={<\equal{##2}{B}>tmCellBlank}] (tmbandcell\thetmBandCnt) at ($(tmbandcell0) + (\thetmBandCnt*\cellSize,0)$) {\tmbandCellCaption##2};
+				\setcounter{tmBandCntHead}{\thetmBandCnt}%
+				\turingBandHelp##4\relax\relax\relax\relax%		
+			}{%
+				\node[tmCell, onif={<\equal{##1}{B}>tmCellBlank}] (tmbandcell\thetmBandCnt) at ($(tmbandcell0) + (\thetmBandCnt*\cellSize,0)$) {\tmbandCellCaption##1};
+				\turingBandHelp##2##3##4\relax\relax\relax%
+		}%
+	}
+	\fi%
+	}
+	
+	
+	
+	\begin{tikzpicture}[remember picture]
+		\node[tmCell] (tmbandcell0) {};
+	
+		\setcounter{tmBandCnt}{0}
+		\setcounter{tmBandCnt}{0}
+		\expandafter\turingBandHelp\tmBand\relax\relax\relax\relax
+	
+		\ifthenelse{\equal{\thetmBandCntHead}{0}}{}{
+			\node[tmHeadMarker, at=(tmbandcell\thetmBandCntHead)] (tmheadmarker) {};				
+		}
+	\end{tikzpicture}
+}
+
+\newcommand{\tmDrawGrid}[2]{
+	\foreach \i in {#1, ..., #2} {
+		\path[draw] ($(tmbandcell0.north west)+(\i*\cellSize, 0)$) 
+		to ($(tmbandcell0.south west)+(\i*\cellSize, 0)$);
+	}
+	
+	\path[draw] ($(tmbandcell0.north west)+(#1*\cellSize, 0)$) 
+	to ($(tmbandcell0.north west)+(#2*\cellSize, 0)$);
+	
+	\path[draw] ($(tmbandcell0.south west)+(#1*\cellSize, 0)$) 
+	to ($(tmbandcell0.south west)+(#2*\cellSize, 0)$);
+}
+
+
+
+
+%%%%%%%%%%%% Turing Machine Execution
+\def\tmMoveLeftHelp#1#2#3#4#5\relax{{%
+	\ifx#1@%
+		% Move left before start: Insert Blank Symbol
+		\xdef\tmNewBand{@B@#2#4#5}%
+	\else%
+		\ifx#4\relax%
+			% This is not possible in an input containing @
+			ILLEGAL INPUT%
+		\else
+			\ifx#2@%
+				\xdef\tmNewBand{\tmNewBand @#1@#3#5}%
+			\else%
+				\xdef\tmNewBand{\tmNewBand#1}%
+				\tmMoveLeftHelp#2#3#4#5\relax\relax%
+			\fi%
+		\fi%
+	\fi
+}}
+
+\def\tmMoveRightHelp#1@#2@#3#4\relax{{%
+	\ifx#3\relax
+		\xdef\tmNewBand{#1#2@B@}%
+	\else
+		\xdef\tmNewBand{#1#2@#3@#4}%
+	\fi
+}}
+
+\newcommand{\tmMoveLeft}{%
+	\def\tmNewBand{}%
+	\expandafter\tmMoveLeftHelp\tmBand\relax\relax\relax\relax\relax%
+	\xdef\tmBand{\tmNewBand}
+}
+
+\newcommand{\tmMoveRight}{%
+	\def\tmNewBand{}%
+	\expandafter\tmMoveRightHelp\tmBand\relax\relax\relax\relax\relax%
+	\xdef\tmBand{\tmNewBand}
+}
+
+
+
+
+\def\tmWriteCharHelp#1@#2@#3\relax{\xdef\tmBand{#1@\tmCharToWrite@#3}}%
+\newcommand{\tmWriteChar}[1]{%
+	\def\tmCharToWrite{#1}%
+	\expandafter\tmWriteCharHelp\tmBand\relax%
+}
+
+\def\tmExecTrans#1#2#3#4#5\relax{
+	\if\tmHeadChar#1
+		\tmWriteChar#2
+		\if#3L
+			\tmMoveLeft
+		\else\if#3R
+			\tmMoveRight
+		\fi\fi
+		\csname#4\endcsname
+	\else
+		\if\relax\detokenize{#5}\relax\else
+			\tmExecTrans#5\relax
+		\fi
+	\fi
+}
+
+\def\tmShowBandHelp#1@#2@#3\relax{%
+	\texttt{#1\underline{#2}#3}%
+}
+
+\newcommand{\tmShowBand}{
+	\expandafter\tmShowBandHelp\tmBand\relax	
+}
+
+
+%%%%%%%%%%%%% TM Parser
+\newcommand{\tmSetup}[2]{{
+	% This macro will interpret a TM specification 
+	% as defined the three operations:
+	%  \tmstate{X}{}{}{} where X is the state's key
+	%  \tmstart{X} where X is the start state's key
+	%  \tmtrans{X}{Y}{Z}{}{} where 
+	%     X is the source state's key
+	%     Y is the target state's key
+	%     Z is a transition list consisting of 
+	%     \trans{A}{B}{C} commands where
+	%		A is the read character
+	%       B the replacement
+	%       C the movement {L, R, H}
+	
+	% The setup process creates a number of macrocs
+	% with a tmImpl#1 prefix. Each state X gets two
+	% macros tmImpl#1TransX which contains a list of
+	% transitions (each transition is defined by 
+	% exactly four tokens) and tmImpl#1X which is
+	% "callable" transition.
+		
+	\def\tmCurrentName{#1}
+	
+	\newcommand{\tmstate}[4]{%
+		\expandafter\xdef\csname tmImpl\tmCurrentName Trans##1\endcsname{}
+		\expandafter\xdef\csname tmImpl\tmCurrentName ##1\endcsname{}
+	}
+	
+	\newcommand{\tmstart}[1]{
+		\expandafter\xdef\csname tmImpl\tmCurrentName Start\endcsname{##1}
+	}
+
+	\newcommand{\trans}[3]{
+		\xdef\tmTransAccum{\tmTransAccum##1##2##3{\tmTransTargetKey}}
+	}
+	\newcommand{\tmtrans}[5]{
+		\tmKeyBasename\tmImplSourceBase##1.\relax		
+		\tmKeyBasename\tmImplTargetBase##2.\relax
+		
+		\xdef\tmTransTargetKey{tmImpl\tmCurrentName\tmImplTargetBase}
+		\def\tmTransAccum{}
+		
+		
+		##3
+		
+		\expandafter\xdef\csname tmImpl\tmCurrentName Trans\tmImplSourceBase\endcsname{%
+			\csname tmImpl\tmCurrentName Trans\tmImplSourceBase\endcsname%
+			\tmTransAccum
+		}
+
+		\expandafter\xdef\csname tmImpl\tmCurrentName\tmImplSourceBase\endcsname{%
+			\noexpand\tmCurrentChar%
+			\noexpand\csname tmImpl\tmCurrentName StateCallback\endcsname{\tmImplSourceBase}%
+			\noexpand\tmExecTrans\csname tmImpl\tmCurrentName Trans\tmImplSourceBase\endcsname\noexpand\relax
+		}
+	}
+
+	% tmTrans Definitions may include newlines; redefine command to prevent output
+	\renewcommand{\\}{}	
+	#2
+}}
+
+
+\def\tmSetInitialBand#1#2\relax{\xdef\tmBand{@#1@#2}}
+\newcommand{\tmExecute}[3]{
+	\tmSetInitialBand#2\relax
+	\expandafter\gdef\csname tmImpl#1StateCallback\endcsname{#3}
+	\csname tmImpl#1\csname tmImpl#1Start\endcsname\endcsname
+}

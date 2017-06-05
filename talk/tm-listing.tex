@@ -1,0 +1,40 @@
+\lstset{
+	language=[LaTeX]{TeX},
+	basicstyle=\small\sffamily,
+	numbers=left,
+	numberstyle=\tiny,
+	commentstyle=\color{goetheblau},
+	frame=tb,
+	columns=fullflexible,
+	showstringspaces=false,
+	morekeywords={\tmstate, \tmstart, \tmtrans, \trans},
+	escapechar={\$},
+	xleftmargin=2em
+}	
+
+\newcommand{\unimportant}[1]{\textcolor{dunkelgrau!30}{#1}}
+\newcommand{\tmkey}[1]{\textcolor{emorot}{#1}}
+%\newcommand{\unimportant}[1]{\textcolor{sandgrau}{#1}}
+
+\begin{frame}[fragile]{Turing Maschine in \LaTeX}
+
+\begin{lstlisting}[]
+% Zustaende {Schluessel}{Name}{Formatierung}
+\tmstate{$\tmkey{firstMinus}$}{Suche Minus}{}{}
+\tmstate{$\tmkey{rightDigit}$}{Rechte Ziffer}{$\unimportant{above right=of firstMinus}$}{}
+\tmstate{$\tmkey{leftDigit}$}{Linke Ziffer}{$\unimportant{below right=of firstMinus}$}{}
+\tmstate{$\tmkey{cleanUp}$}{Aufraeumen}{$\unimportant{below right=of rightDigit}$}{}
+
+\tmstart{$\tmkey{firstMinus}$}
+
+% Uebergaenge {VON}{NACH}{\trans XYZ: Wenn X gelesen, schreibe Y, bewege Kopf nach Z}
+\tmtrans{$\tmkey{firstMinus}$}{$\tmkey{firstMinus}$}{\trans 11R }{$\unimportant{loop below}$}{}
+\tmtrans{$\tmkey{firstMinus}$.east}{$\tmkey{rightDigit}$.west}{\trans --R}{$\unimportant{above,sloped}$}{}
+\tmtrans{$\tmkey{rightDigit}$}{$\tmkey{rightDigit}$}{\trans --R}{$\unimportant{loop above}$}{}
+\tmtrans{$\tmkey{rightDigit}$}{$\tmkey{leftDigit}$}{\trans 1-L}{$\unimportant{bend right, below, left}$}{}
+\tmtrans{$\tmkey{rightDigit}$.east}{$\tmkey{cleanUp}$.west}{\trans BBL}{$\unimportant{above, sloped}$}{}
+\tmtrans{$\tmkey{leftDigit}$}{$\tmkey{leftDigit}$}{\trans --L}{$\unimportant{loop below}$}{}
+\tmtrans{$\tmkey{leftDigit}$}{$\tmkey{rightDigit}$}{\trans 1-R}{$\unimportant{bend right, below, right}$}{}
+\tmtrans{$\tmkey{cleanUp}$}{$\tmkey{cleanUp}$}{\trans -BL}{$\unimportant{loop below}$}{}
+\end{lstlisting}
+\end{frame}

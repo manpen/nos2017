@@ -1,0 +1,54 @@
+\def\turingAStateDef{
+%%%%%% BEGIN-TM: turingI, B111-11B %%%%%
+	\tmstate{firstMinus}{Suche Minus}  {}{}
+	\tmstate{rightDigit}{Rechte Ziffer}{above right=of firstMinus}{}
+	\tmstate{leftDigit} {Linke Ziffer} {below right=of firstMinus}{}
+	\tmstate{cleanUp}   {Aufräumen}    {below right=of rightDigit}{}
+	
+	\tmstart{firstMinus}
+	
+	\tmtrans{firstMinus}{firstMinus}{\trans 11R }{loop below}{}
+	\tmtrans{firstMinus.east}{rightDigit.west}{\trans --R}{above,sloped}{}
+	
+	\tmtrans{rightDigit}{rightDigit}{\trans --R}{loop above}{}
+	\tmtrans{rightDigit}{leftDigit}{\trans 1-L}{bend right, below, left}{}
+	\tmtrans{rightDigit.east}{cleanUp.west}{\trans BBL}{above, sloped}{}
+	
+	
+	\tmtrans{leftDigit}{leftDigit}{\trans --L}{loop below}{}
+	\tmtrans{leftDigit}{rightDigit}{\trans 1-R}{bend right, below, right}{}
+	
+	\tmtrans{cleanUp}{cleanUp}{\trans -BL}{loop below}{}
+%%%%%% END-TM: turingI %%%%%
+}
+
+\newcommand{\tmADraw}[1]{
+	\newcommand{\tmStateCurrent}{#1}
+
+	\begin{center}
+		\scalebox{0.9}{
+			\tmDrawStates{\turingAStateDef}
+		}
+		
+		\vspace{2em}
+		
+		\tmDrawBand
+	\end{center}
+	
+	\begin{tikzpicture}[remember picture, overlay]
+		\foreach \i in {1,...,10} {
+			\node[tmCell, tmCellBlank] at ($(tmbandcell0) - (\i*\cellSize,0) + (\cellSize, 0)$) {\tmBlankSym};
+			\node[tmCell, tmCellBlank] at ($(tmbandcell0) + (\i*\cellSize,0) + (\thetmBandCnt*\cellSize, 0)$) {\tmBlankSym};
+		}
+		
+		\tmDrawGrid{-10}{20}
+	\end{tikzpicture}
+}
+
+
+\newcommand{\tmACallback}[1]{\only<+>{\tmADraw{#1}}}
+\tmSetup{A}{\turingAStateDef}
+
+\begin{frame}{Subtraktion: $3 - 2 = ?$}
+	\tmExecute{A}{111-11B}{\tmACallback}
+\end{frame}
