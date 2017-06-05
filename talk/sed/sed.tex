@@ -1,0 +1,158 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage{color, colortbl}
+
+\usepackage[USenglish]{babel}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+
+\usepackage{latexsym}
+\usepackage{xspace}
+
+%TODO: Cyriax should install packages...
+%\usepackage{siunitx}
+%\sisetup{locale = DE}
+
+\usepackage{xstring}
+\usepackage{tikz}
+\usepackage{pgf}
+
+
+\usetikzlibrary{calc}   
+\usetikzlibrary{positioning}
+\usetikzlibrary{automata}
+
+\usepackage{soul}
+
+% Make it different to distinguish it from Manus stuff
+\usetheme{Berlin}
+\usecolortheme{dolphin}
+
+\usepackage{cancel}
+\usepackage{ulem}
+
+
+
+
+
+
+\begin{document}
+\title{
+	Cyriax dem sein supertoller \texttt{sed} Vortrag
+}
+\author{
+	Jonathan Cyriax Brast\\
+	Manuel Penschuck \\
+} 
+\date{10. Juni 2017}
+
+{
+\setbeamertemplate{footline}{} 
+\begin{frame}
+  \titlepage
+\end{frame}
+}
+\addtocounter{framenumber}{-1}
+
+\newcommand{\bsl}{{\tt \textbackslash}}
+
+%\frame{\frametitle{Outline}\tableofcontents}
+
+%%%%%%%%%%%%%
+\begin{frame}{\texttt{sed} - H\"a was?}
+	{
+	\Huge
+	\only<1,3->{\texttt{sed}} % besteht aus den drei buchstaben
+	\only<2>{\texttt{s e d}}\quad
+	\only<4-5>{\only<5>{\xout}{''Suchen und Ersetzen in Dateien''}}
+	\only<6->{''\textbf{S}tream \textbf{Ed}itor''}\\
+	}
+	\pause\pause\pause\pause\pause\pause
+	{\tt sed} ist ein Linux Programm \\\pause
+	{\tt sed} kann Text(-dateien) automatisch \"andern\\\pause
+	{\tt sed} sucht Dinge und ersetzt sie durch Zeuch\\\pause
+	{\tt sed} bekommt dazu Befehle wie es suchen und ersetzen soll\\\pause
+	{\Large \quad\quad ergo folgt deshalb daraus:\\\pause}
+	{\tt sed} ist viel cooler als Turing Maschinen\\\pause
+	{\hspace{22em} $\square$ q.e.d. \texttt{\#isso}}
+\end{frame}
+
+\begin{frame}{{\tt sed} - Befehle} %obsolet, weil editwar. Aber bleibt drin, wegen realistischer
+	Suchen und Ersetzen (alles andere is unwichtig):\\\pause
+	{\tt s/     /      /}  - S wie ''suchen und ersetzen''\\\pause
+	{\tt s/ foo / bar /}
+		\pause\quad
+		'' foo '' $\rightarrow$ '' bar ''\\\pause
+	{\tt s/ .* / bar /}
+		\pause\quad
+		'' irgendwas '' $\rightarrow$ '' bar ''\\\pause
+	{\tt s/ (foo) (bar) / \bsl2 \bsl1 /}
+		\pause\quad
+		'' foo bar '' $\rightarrow$ '' bar foo ''\\\pause
+	Sonstige Befehle:\\\pause
+	{\tt :irgendwo} Eine Sprungmarke\\\pause
+	{\tt t irgendwo} Springe zur Sprungmarke\\\pause
+	{\tt p } Drucke aus, was du grade denkst\\
+
+\end{frame}
+
+
+\begin{frame}{ {\tt sed} kann alle Teile von Manuels Turingmaschine bauen!}
+
+	Manuels Maschine besteht aus:\\\pause
+	Zust\"anden\\\pause
+	Zunstands\"uberg\"angen\\\pause
+	Band\\\pause
+	Kopf\\
+\end{frame}
+
+\begin{frame}{ Zust\"ande und \"Uberg\"ange }
+	Jeder Zustand hat einen Namen!\\\pause
+	AlterZustand $\rightarrow$ NeuerZustand \only<2>{(wie ?)} % dummes bild!
+	\\\pause
+	{\tt s/AlterZustand/NeuerZustand/} \only<3>{(duh !)}
+	\\\pause
+	--separator--\\
+	Aber der \"Ubergang h\"angt von einen Zeichen ab!\\\pause
+	AlterZustand $0\rightarrow$ EinZustand \\ % dummes bild!
+	AlterZustand $1\rightarrow$ AndererZustand \\ % dummes bild!
+	\pause
+	{\tt s/AlterZustand:0/EinZustand:0/}\\
+	{\tt s/AlterZustand:1/NeuerZustand:1/}\\
+\end{frame}
+
+\begin{frame}{BandKopfApparat}
+	%\begin{dummeIdee}
+	@ sieht aus wie ein Kopf...\\\pause %Dumme Grafik!
+	%\end{dummeIdee}
+	Nach links gehen:\\
+	''Hallo W@elt'' $\rightarrow$ ''Hallo @Welt''\\\pause
+	\texttt{s/(.*)(.)@(.*)/\bsl1@\bsl2\bsl3/}\\\pause
+	e lesen und \"a schreiben:\\
+	''Hallo W@elt'' $\rightarrow$ ''Hallo W@\"alt''\\\pause
+	\texttt{s/(.*)@e(.*)/\bsl1@\"a\bsl2/}\\\pause
+	Beides Zusammen:\\
+	''Hallo W@elt'' $\rightarrow$ ''Hallo @W\"alt''\\\pause
+	\texttt{s/(.*)(.)@e(.*)/\bsl1@\bsl2\"a\bsl3/}\\
+\end{frame}
+
+
+\begin{frame}{Die {\tt sed} Turingmaschine}
+	Wir brauchen:\\\pause
+	1. Zustands\"ubergang \\\pause
+	2. Lesen / Schreiben \\\pause
+	3. Gehe nach (links/rechts)\\\pause
+	Alles Gleichzeitig!\\\pause
+
+	Gehe von ZUSTAND-ALT in ZUSTAND-NEU wenn du X liest und schreibe Y und\\
+	\quad1. Gehe nach links:\\\pause
+	\texttt{s/ZUSTAND-ALT:(.*)(.)@X(.*)/ZUSTAND-NEU:\bsl1@\bsl2Y\bsl3/}\\\pause
+	\quad2. Gehe nach rechts:\\\pause
+	\texttt{s/ZUSTAND-ALT:(.*)@X(.)(.*)/ZUSTAND-NEU:\bsl1Y@\bsl2\bsl3/}\\
+\end{frame}
+
+
+
+\end{document}
+
