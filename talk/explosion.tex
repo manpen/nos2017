@@ -1,0 +1,160 @@
+\makeatletter
+\newcommand{\pausecounter}{\number\c@beamerpauses}
+\newcommand{\thisslide}{\number\beamer@slideinframe}
+\makeatother	
+
+
+\def\disableSims{2}
+\def\simConcepts{tm}
+\newcommand{\simulateEdges}[2]{
+	\only<-\intcalcDec{\disableSims}>{
+		\begin{scope}[on background layer]
+			\foreach \n/\p in {#1} {
+				% default \p to {} if not defined (foreach will set it to \n)
+				\ifthenelse{\equal{\n}{\p}}{\def\p{}}{}
+				\path[simulates,\p] (#2) to (\n);
+			}
+		\end{scope}
+	}
+}
+
+\newcommand{\newconcept}[6]{
+	% 1 key
+	% 2 position rad
+	% 3 position angle
+	% 4 simulates (comma sep)
+	% 5 name
+	% 6 image 
+	
+	\only<\pausecounter->{
+		% book keeping: add concept to list of concepts
+		\xdef\simConcepts{\simConcepts,#1}
+		
+		\pgfmathsetmacro\posx{cos(#3)*#2}
+		\pgfmathsetmacro\posy{sin(#3)*#2}
+		
+		\node[concept] (#1) at ($(tm)  + (\posx, \posy)$) {#5};
+		
+		\ifthenelse{\equal{#4}{}}{}{
+			\simulateEdges{#4}{#1}
+		}
+	}
+	
+	\only<\pausecounter>{
+	\node[minimum width=0.25\textwidth, anchor=west, at=(current page.west), xshift=1em] {
+		\infopanel
+%		\IfFileExists{images/#1.pdf}{true-branch}{}
+		\IfFileExists{images/#1.png}{\includegraphics[width=0.3\textwidth]{images/#1.png}}{}		\IfFileExists{images/#1.jpg}{\includegraphics[width=0.3\textwidth]{images/#1.jpg}}{}
+	};}
+
+	\xdef\infopanel{}
+}
+
+
+\begin{frame}{Simulation}
+	\xdef\simConcepts{tm}
+	\begin{center}
+		\begin{tikzpicture}[
+			overlay, remember picture,
+			conceptActive/.style={text=emorot},
+			concept/.style={draw, rounded corners=0.4em, minimum height=1.6em, fill=white, onslide={<\pausecounter> conceptActive},  align=center},
+			simulatesActive/.style={emorot},
+			simulates/.style={draw, ->, thick, onslide={<\pausecounter> simulatesActive}}
+		]
+		{
+%			\renewcommand{\pause}{}
+			
+			\node[concept, at=(current page), xshift=4em] (tm) {Turing Machine};
+			
+			\pause
+			\def\infopanel{\texttt{sed s/Hello World/Hallo Welt/}}
+			\newconcept{sed}{2}{45}{tm}{SED}{}
+			
+			\pause
+			\newconcept{python}{4}{45}{tm/bend right, sed}{Python}{}
+			
+			\pause
+			\newconcept{cccc}{3}{22}{tm}{C/C++}{}
+			
+			\pause
+			\newconcept{ctemp}{5}{22}{tm}{C++\\ templates}{}
+		
+
+			\pause
+			\newconcept{js}{4}{3}{tm}{JavaScript\\ und Co}{}
+
+			\pause
+			\newconcept{excel}{2}{100}{tm}{Excel}{}
+
+			\pause
+			\newconcept{powerpoint}{3}{135}{tm}{Powerpoint}{}
+
+			\pause
+			\newconcept{tex}{3}{80}{tm}{\TeX / \LaTeX}
+
+			\pause
+			\newconcept{mail}{3}{155}{tm}{EMails}
+
+
+			\pause
+			\newconcept{gol}{3}{180}{tm}{Game of\\ Life}{}
+
+			\pause
+			\newconcept{rooz}{2.5}{210}{tm}{Rule 110}{}
+
+			\pause
+			\newconcept{html}{3.8}{220}{rooz}{HTML5 \\ CSS3}{}
+
+			\pause
+			\newconcept{minecraft}{4}{240}{tm}{MineCraft}{}
+
+			\pause
+			\newconcept{ksp}{2}{250}{tm}{KSP}{}
+
+			\pause
+			\newconcept{minesweeper}{2.5}{270}{tm}{MineSweeper}{}
+
+			\pause
+			\newconcept{littlebigplanet}{3.5}{280}{tm}{Little Big Planet}{}
+
+
+
+		}
+			\pause
+			\only<\pausecounter->{
+				\newconcept{ram}{4}{330}{}{Register Machine}{}
+				\simulateEdges{ram}{tm}
+			}
+
+			\pause			
+			\only<\pausecounter-\intcalcDec{\disableSims}>{
+				
+				\begin{scope}[on background layer]			
+					\foreach \n in \simConcepts {
+						\path[simulates,onslide={<\pausecounter> simulatesActive}] (ram) to (\n);			
+					}
+				\end{scope}
+			}
+
+			\pause
+			\xdef\disableSims{\pausecounter}
+			\only<\pausecounter->{
+				\begin{scope}[on background layer]			
+				\foreach \x in \simConcepts {
+					\def\active{}
+					\foreach \y in \simConcepts {
+						\ifthenelse{\equal{1}{\active}}{
+							\path[simulates,onslide={<\pausecounter> simulatesActive}, <->] (\x) to (\y);			
+
+						}{}
+						\ifthenelse{\equal\x\y}{\xdef\active{1}}{}
+					}
+					
+					\path[simulates,onslide={<\pausecounter> simulatesActive}, loop left] (\x) to (\x);
+				}
+				\end{scope}
+			}
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
