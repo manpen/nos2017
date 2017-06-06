@@ -68,6 +68,7 @@
 }}
 
 \newcommand{\tikzanchor}[1]{\tikz[overlay, remember picture]{\node[anchor=text, inner sep=0] (#1) {\phantom{Ig}};}}
+\newcommand{\tikzanchortext}[2]{\tikz[overlay, remember picture]{\node[anchor=text, inner sep=0] (#1) {#2};}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -118,11 +119,11 @@
 
 %%%%%%%%%%%%%
 
-\input{intro}
-\input{intro-subtraction}
-\input{tm-intro}
-\input{tm-subtract-unary}
-\input{how-to-sed}
+%\input{intro}
+%\input{intro-subtraction}
+%\input{tm-intro}
+%\input{tm-subtract-unary}
+%\input{how-to-sed}
 \input{tm-listing}
 
 \input{explosion}

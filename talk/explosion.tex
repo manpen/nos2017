@@ -24,7 +24,6 @@
 	% 3 position angle
 	% 4 simulates (comma sep)
 	% 5 name
-	% 6 image 
 	
 	\only<\pausecounter->{
 		% book keeping: add concept to list of concepts
@@ -41,25 +40,38 @@
 	}
 	
 	\only<\pausecounter>{
-	\node[minimum width=0.25\textwidth, anchor=west, at=(current page.west), xshift=1em] {
-		\infopanel
-%		\IfFileExists{images/#1.pdf}{true-branch}{}
-		\IfFileExists{images/#1.png}{\includegraphics[width=0.3\textwidth]{images/#1.png}}{}		\IfFileExists{images/#1.jpg}{\includegraphics[width=0.3\textwidth]{images/#1.jpg}}{}
-	};}
+		\node[minimum width=0.25\textwidth, anchor=west, at=(current page.west), xshift=1em] {
+			\ifthenelse{\equal{\infopanelenable}{}}%
+			{%
+				\IfFileExists{images/#1.pdf}{true-branch}{}%
+				\IfFileExists{images/#1.png}{\includegraphics[width=0.3\textwidth]{images/#1.png}}{}%
+				\IfFileExists{images/#1.jpg}{\includegraphics[width=0.3\textwidth]{images/#1.jpg}}{}%
+			}%
+			{}
+		};
+	}
 
-	\xdef\infopanel{}
+	\xdef\infopanelenable{}
 }
 
+\newcommand{\setInfoPanel}[1]{
+	\def\infopanelenable{1}
+	\only<\pausecounter>{
+		\node[minimum width=0.25\textwidth, anchor=west, at=(current page.west), xshift=1em] {#1};
+	}
+}
+\newcommand{\bsl}{{\tt \textbackslash}}
 
-\begin{frame}{Simulation}
+
+\begin{frame}[fragile]{Simulation}
 	\xdef\simConcepts{tm}
 	\begin{center}
 		\begin{tikzpicture}[
 			overlay, remember picture,
-			conceptActive/.style={text=emorot},
-			concept/.style={draw, rounded corners=0.4em, minimum height=1.6em, fill=white, onslide={<\pausecounter> conceptActive},  align=center},
+			conceptActive/.style={text=emorot, emorot, fill=emorot!10},
+			concept/.style={dunkelgrau, text=black, draw, fill=sandgrau, rounded corners=0.4em, minimum height=1.6em, onslide={<\pausecounter> conceptActive},  align=center},
 			simulatesActive/.style={emorot},
-			simulates/.style={draw, ->, thick, onslide={<\pausecounter> simulatesActive}}
+			simulates/.style={draw, ->, thick, opacity=0.5, onslide={<\pausecounter> simulatesActive}}
 		]
 		{
 %			\renewcommand{\pause}{}
@@ -67,13 +79,65 @@
 			\node[concept, at=(current page), xshift=4em] (tm) {Turing Machine};
 			
 			\pause
-			\def\infopanel{\texttt{sed s/Hello World/Hallo Welt/}}
+			\setInfoPanel{\parbox{0.26\textwidth}{
+				\texttt{s\\/ZUSTAND-ALT:(.*)(.)@X(.*)\\/ZUSTAND-NEU:\bsl1@\bsl2Y\bsl3/}
+			}}
 			\newconcept{sed}{2}{45}{tm}{SED}{}
 			
 			\pause
-			\newconcept{python}{4}{45}{tm/bend right, sed}{Python}{}
+			\setInfoPanel{				
+				\parbox{0.28\textwidth}{
+				\begin{center}
+				\includegraphics[width=0.15\textwidth]{images/python.png}
+				\end{center}
+			}}
+			\newconcept{python}{4}{45}{sed,tm}{Python}{}
+
+			\pause
+			\setInfoPanel{				
+				\parbox{0.28\textwidth}{
+				\begin{center}
+				\includegraphics[width=0.15\textwidth]{images/python.png}
+				\end{center}
+				\vspace{1em}	
+				
+				\fbox{\parbox{0.28\textwidth}{\small
+				\textbf{if} state=="A":\\
+				\phantom.\hspace{1em}\textbf{if} band.read()=="0":\\
+				\phantom.\hspace{2em}band.write(1)\\
+				\phantom.\hspace{2em}band.goLeft()\\
+				\phantom.\hspace{2em}state = "B"\\
+				\phantom.\hspace{1em}\textbf{elif} band.read()=="1":\\
+				\phantom.\hspace{2em}\ldots\\
+				\textbf{elif} state=="B":\\
+				\phantom.\hspace{1em}\textbf{if} band.read()=="0":\\
+				\phantom.\hspace{1em}\ldots
+			}}}}
+			\only<\pausecounter->{
+				\simulateEdges{tm/bend right}{python}
+			}
+			
 			
 			\pause
+			\setInfoPanel{				
+				\parbox{0.32\textwidth}{
+				\begin{center}
+				\includegraphics[width=0.15\textwidth]{images/cccc.png}
+				\end{center}
+				\vspace{1em}	
+				
+				\fbox{\parbox{0.32\textwidth}{\small
+				\textbf{if} (state=='A') \{\\
+				\phantom.\hspace{1em}\textbf{if}(band.read()=='0') \{\\
+				\phantom.\hspace{2em}band.write(1)\\
+				\phantom.\hspace{2em}band.goLeft()\\
+				\phantom.\hspace{2em}state = "B"\\
+				\phantom.\hspace{1em}\} \textbf{else if}(band.read()=='1') \{ \\
+				\phantom.\hspace{2em}\ldots \}\\
+				\} \textbf{else if}(state=="B") \{\\
+				\phantom.\hspace{1em}\textbf{if}(band.read()=="0") \{\\
+				\phantom.\hspace{1em}\ldots \}\}
+			}}}}			
 			\newconcept{cccc}{3}{22}{tm}{C/C++}{}
 			
 			\pause
@@ -93,7 +157,7 @@
 			\newconcept{tex}{3}{80}{tm}{\TeX / \LaTeX}
 
 			\pause
-			\newconcept{mail}{3}{155}{tm}{EMails}
+			\newconcept{mail}{3}{155}{tm}{eMails}
 
 
 			\pause

@@ -16,18 +16,16 @@
 \newcommand{\tmkey}[1]{\textcolor{emorot}{#1}}
 %\newcommand{\unimportant}[1]{\textcolor{sandgrau}{#1}}
 
-\begin{frame}[fragile]{Turing Maschine in \LaTeX}
+\begin{frame}[fragile]{Unsere Turing Maschine in \LaTeX}
 
 \begin{lstlisting}[]
-% Zustaende {Schluessel}{Name}{Formatierung}
 \tmstate{$\tmkey{firstMinus}$}{Suche Minus}{}{}
 \tmstate{$\tmkey{rightDigit}$}{Rechte Ziffer}{$\unimportant{above right=of firstMinus}$}{}
 \tmstate{$\tmkey{leftDigit}$}{Linke Ziffer}{$\unimportant{below right=of firstMinus}$}{}
-\tmstate{$\tmkey{cleanUp}$}{Aufraeumen}{$\unimportant{below right=of rightDigit}$}{}
+\tmstate{$\tmkey{cleanUp}$}{Aufraeumen}{$\unimportant{below right=of rightDigit}$}{}$\pause$
 
-\tmstart{$\tmkey{firstMinus}$}
+\tmstart{$\tmkey{firstMinus}$}$\pause$
 
-% Uebergaenge {VON}{NACH}{\trans XYZ: Wenn X gelesen, schreibe Y, bewege Kopf nach Z}
 \tmtrans{$\tmkey{firstMinus}$}{$\tmkey{firstMinus}$}{\trans 11R }{$\unimportant{loop below}$}{}
 \tmtrans{$\tmkey{firstMinus}$.east}{$\tmkey{rightDigit}$.west}{\trans --R}{$\unimportant{above,sloped}$}{}
 \tmtrans{$\tmkey{rightDigit}$}{$\tmkey{rightDigit}$}{\trans --R}{$\unimportant{loop above}$}{}
