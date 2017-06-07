@@ -83,23 +83,42 @@
 	{\hspace{22em} $\square$ q.e.d. \texttt{\#isso}}
 \end{frame}
 
-\begin{frame}{Strings und Regul\"are Ausdr\"ucke}
-	Strings sind Zeichenketten:\\
-	\hspace{2em}\textit{''Hallo Welt!''}\\\pause
-	\hspace{2em}\textit{''covfefe''}\\\pause
-	\hspace{2em}\textit{''111-11''}\\\pause
-	\bigskip
-	Regul\"are Ausdr\"ucke sind Beschreibungen von Strings:\\
-	\hspace{5em}  \textit{\cA{h}\cB{a}\cC{ll}\cD{o} = ein \cA{h}, ein \cB{a}, zwei \cC{l} und ein \cD{o}}\\\pause
-	\hspace{5em}  \textit{\cA{.}\cD{.}\cC{.} = \cA{irgendein Zeichen}, \cD{noch ein Zeichen} und \cC{noch ein Zeichen}}\\\pause
-	\hspace{5em}  \textit{\cA{x*}\cB{y*} = erst \cA{viele x} und dann \cB{viele y}}\\\pause
-	\hspace{5em}  \textit{\cA{hallo}\cD{.*} = \cA{hallo} und dann \cD{irgendwas}}\\ 
+\begin{frame}{Womit arbeitet {\tt sed}}
+
+	%Strings sind Zeichenketten:\\
+	%\hspace{2em}\textit{''Hallo Welt!''}\\\pause
+	%\hspace{2em}\textit{''covfefe''}\\\pause
+	%\hspace{2em}\textit{''111-11''}\\\pause
+	%\bigskip
+	%Regul\"are Ausdr\"ucke sind Beschreibungen von Strings:\\
+	\begin{tabular}{ll}
+
+		\textit{\cA{h}\cB{a}\cC{ll}\cD{o}} &
+		ein \cA{h}, ein \cB{a}, zwei \cC{l} und ein \cD{o}\\&
+		\textit{''hallo''}\vspace{.2em}
+		\\\pause
+		\textit{\cA{h}\cB{.}\cC{ll}\cD{o}} &
+		ein \cA{h},  ein \cB{beliebiges Zeichen},  zwei \cC{l} und ein \cD{o}\\&
+		\textit{''hallo'' \quad  ''hello'' \quad  ''h4llo''}
+		\\\pause
+		\textit{\cA{.}\cD{.}\cC{.}}&
+		\cA{irgendein Zeichen},  \cD{noch ein Zeichen} und \cC{noch ein Zeichen}\\&
+		\textit{''ABC'' \quad ''123'' \quad ''{\tt sed}''}
+		\\\pause
+		\textit{\cA{ha}\cB{l*}\cD{o}} &
+		erst \cA{ha}, dann \cB{beliebig viele l} und dann ein \cD{o}\\&
+		\textit{''hallo'' \quad ''halo'' \quad ''hao'' \quad  ''hallllllllo''}
+		\\\pause
+		\textit{\cA{ha}\cD{.*}} &
+		\cA{ha} und dann \cD{irgendwas} \\&
+		\textit{''hallo'' \quad ''hartgekochter'' \quad ''hamster'' \quad ''haha'' \quad ''ha''}
+	\end{tabular}
 \end{frame}
 
 \begin{frame}{{\tt sed} - Grundlegende Befehle} %obsolet, weil editwar. Aber bleibt drin, wegen realistischer
 	Suchen und Ersetzen (alles andere is unwichtig):\\\pause
 	\begin{tabular}{ll}
-		{\tt s/     /      /}
+		{\tt s/ / /}
 		&
 		{\tt s} wie ''suchen und ersetzen''\\\pause
 		{\tt s/ \cA{foo} / \cB{bar} /}
@@ -183,7 +202,7 @@
 \end{frame}
 
 
-\begin{frame}{{\tt sed} Turingmaschinenzustands\"uberg\"nge}
+\begin{frame}{{\tt sed} Turingmaschinenzustands\"uberg\"ange}
 	\hspace{8em}
 	''\cC{ZUSTAND}:\cA{001001001011\cE{1}\cD{@}\cB{0}001010010011}''\\\pause
 	\bigskip
