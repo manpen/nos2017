@@ -34,6 +34,8 @@
 \usepackage{soul}
 \graphicspath{{./images/}}
 \usepackage{listings}
+\usepackage{qrcode}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % We gonna write a lot of unary numbers; let TeX do the work for us
@@ -89,7 +91,22 @@
 
 \tikzset{loop above/.style={looseness=8, out=120, in=60}}
 \tikzset{loop below/.style={looseness=8, out=300, in=240}}
- 		
+\pgfplotsset{compat=1.13}
+
+\lstset{
+	language=[LaTeX]{TeX},
+	basicstyle=\small\sffamily,
+	numbers=left,
+	numberstyle=\tiny,
+	commentstyle=\color{goetheblau},
+	frame=tb,
+	columns=fullflexible,
+	showstringspaces=false,
+	morekeywords={\tmstate, \tmstart, \tmtrans, \trans},
+	escapechar={\$},
+	xleftmargin=2em
+}
+
 
 \begin{document}
 \title{
@@ -119,14 +136,13 @@
 
 %%%%%%%%%%%%%
 
-%\input{intro}
-%\input{intro-subtraction}
-%\input{tm-intro}
-%\input{tm-subtract-unary}
-%\input{how-to-sed}
+\input{intro-subtraction}
+\input{tm-intro}
+\input{tm-subtract-unary}
 \input{tm-listing}
-
+%
 \input{explosion}
+\input{outro}
 
 
 
