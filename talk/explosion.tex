@@ -43,9 +43,11 @@
 		\node[minimum width=0.25\textwidth, anchor=west, at=(current page.west), xshift=1em] {
 			\ifthenelse{\equal{\infopanelenable}{}}%
 			{%
-				\IfFileExists{images/#1.pdf}{true-branch}{}%
-				\IfFileExists{images/#1.png}{\includegraphics[width=0.3\textwidth]{images/#1.png}}{}%
-				\IfFileExists{images/#1.jpg}{\includegraphics[width=0.3\textwidth]{images/#1.jpg}}{}%
+				\parbox{0.3\textwidth}{
+					\IfFileExists{images/#1.pdf}{true-branch}{}
+					\IfFileExists{images/#1.png}{\includegraphics[width=0.3\textwidth]{images/#1.png}\ }{}
+					\IfFileExists{images/#1.jpg}{\includegraphics[width=0.3\textwidth]{images/#1.jpg}}{}%
+				}
 			}%
 			{}
 		};
@@ -63,7 +65,7 @@
 \newcommand{\bsl}{{\tt \textbackslash}}
 
 
-\begin{frame}[fragile]{Simulation}
+\begin{frame}[fragile]{}
 	\xdef\simConcepts{tm}
 	\begin{center}
 		\begin{tikzpicture}[
@@ -145,7 +147,7 @@
 		
 
 			\pause
-			\newconcept{js}{4}{3}{tm}{JavaScript\\ und Co}{}
+			\newconcept{javascript}{4}{3}{tm}{JavaScript}{}
 
 			\pause
 			\newconcept{excel}{2}{100}{tm}{Excel}{}
@@ -154,11 +156,7 @@
 			\newconcept{powerpoint}{3}{135}{tm}{Powerpoint}{}
 
 			\pause
-			\newconcept{tex}{3}{80}{tm}{\TeX / \LaTeX}
-
-			\pause
-			\newconcept{mail}{3}{155}{tm}{eMails}
-
+			\newconcept{email}{3}{155}{tm}{eMails}
 
 			\pause
 			\newconcept{gol}{3}{180}{tm}{Game of\\ Life}{}
@@ -167,23 +165,24 @@
 			\newconcept{rooz}{2.5}{210}{tm}{Rule 110}{}
 
 			\pause
-			\newconcept{html}{3.8}{220}{rooz}{HTML5 \\ CSS3}{}
+			\newconcept{htmlcss}{3.8}{220}{rooz}{CSS3}{}
+
+			\pause
+			\newconcept{dwarf}{2.5}{250}{tm}{Dwarf\\Fortress}{}
 
 			\pause
 			\newconcept{minecraft}{4}{240}{tm}{MineCraft}{}
 
 			\pause
-			\newconcept{ksp}{2}{250}{tm}{KSP}{}
+			\newconcept{factorio}{1.5}{280}{tm}{Factorio}{}
 
 			\pause
-			\newconcept{minesweeper}{2.5}{270}{tm}{MineSweeper}{}
+			\newconcept{braid}{2.5}{290}{tm}{Braid}{}
 
 			\pause
 			\newconcept{littlebigplanet}{3.5}{280}{tm}{Little Big Planet}{}
-
-
-
 		}
+		
 			\pause
 			\only<\pausecounter->{
 				\newconcept{ram}{4}{330}{}{Register Machine}{}
@@ -204,6 +203,8 @@
 			\xdef\disableSims{\pausecounter}
 			\only<\pausecounter->{
 				\begin{scope}[on background layer]			
+				\setInfoPanel{\includegraphics[width=0.3\textwidth]{images/executeall.jpg}}
+
 				\foreach \x in \simConcepts {
 					\def\active{}
 					\foreach \y in \simConcepts {
@@ -217,6 +218,7 @@
 					\path[simulates,onslide={<\pausecounter> simulatesActive}, loop left] (\x) to (\x);
 				}
 				\end{scope}
+				
 			}
 		\end{tikzpicture}
 	\end{center}
