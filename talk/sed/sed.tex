@@ -1,4 +1,4 @@
-\documentclass[aspectratio=169]{beamer}
+\documentclass[aspectratio=169,usenames,dvipsnames]{beamer}
 
 \usepackage{color, colortbl}
 
@@ -35,8 +35,6 @@
 
 
 
-
-
 \begin{document}
 \title{
 	Cyriax dem sein supertoller \texttt{sed} Vortrag
@@ -55,7 +53,14 @@
 }
 \addtocounter{framenumber}{-1}
 
-\newcommand{\bsl}{{\tt \textbackslash}}
+\newcommand{\bsl}{{\ttfamily \symbol{`\\}}}
+\newcommand{\cA}[1]{{\color{NavyBlue}#1}}
+\newcommand{\cB}[1]{{\color{YellowOrange}#1}}
+\newcommand{\cC}[1]{{\color{Violet}#1}}
+\newcommand{\cD}[1]{{\color{Red}#1}}
+\newcommand{\cE}[1]{{\color{OliveGreen}#1}}
+\newcommand{\cF}[1]{{\color{CadetBlue}#1}}
+\newcommand{\cG}[1]{{\color{Gray}#1}}
 
 %\frame{\frametitle{Outline}\tableofcontents}
 
@@ -78,80 +83,168 @@
 	{\hspace{22em} $\square$ q.e.d. \texttt{\#isso}}
 \end{frame}
 
-\begin{frame}{{\tt sed} - Befehle} %obsolet, weil editwar. Aber bleibt drin, wegen realistischer
+\begin{frame}{Strings und Regul\"are Ausdr\"ucke}
+	Strings sind Zeichenketten:\\
+	\hspace{2em}\textit{''Hallo Welt!''}\\\pause
+	\hspace{2em}\textit{''covfefe''}\\\pause
+	\hspace{2em}\textit{''111-11''}\\\pause
+	\bigskip
+	Regul\"are Ausdr\"ucke sind Beschreibungen von Strings:\\
+	\hspace{5em}  \textit{\cA{h}\cB{a}\cC{ll}\cD{o} = ein \cA{h}, ein \cB{a}, zwei \cC{l} und ein \cD{o}}\\\pause
+	\hspace{5em}  \textit{\cA{.}\cD{.}\cC{.} = \cA{irgendein Zeichen}, \cD{noch ein Zeichen} und \cC{noch ein Zeichen}}\\\pause
+	\hspace{5em}  \textit{\cA{x*}\cB{y*} = erst \cA{viele x} und dann \cB{viele y}}\\\pause
+	\hspace{5em}  \textit{\cA{hallo}\cD{.*} = \cA{hallo} und dann \cD{irgendwas}}\\ 
+\end{frame}
+
+\begin{frame}{{\tt sed} - Grundlegende Befehle} %obsolet, weil editwar. Aber bleibt drin, wegen realistischer
 	Suchen und Ersetzen (alles andere is unwichtig):\\\pause
-	{\tt s/     /      /}  - S wie ''suchen und ersetzen''\\\pause
-	{\tt s/ foo / bar /}
-		\pause\quad
-		'' foo '' $\rightarrow$ '' bar ''\\\pause
-	{\tt s/ .* / bar /}
-		\pause\quad
-		'' irgendwas '' $\rightarrow$ '' bar ''\\\pause
-	{\tt s/ (foo) (bar) / \bsl2 \bsl1 /}
-		\pause\quad
-		'' foo bar '' $\rightarrow$ '' bar foo ''\\\pause
+	\begin{tabular}{ll}
+		{\tt s/     /      /}
+		&
+		{\tt s} wie ''suchen und ersetzen''\\\pause
+		{\tt s/ \cA{foo} / \cB{bar} /}
+		&
+		'' \cA{foo} '' $\rightarrow$ \pause '' \cB{bar} ''\\\pause
+		{\tt s/ \cA{.*} / \cB{bar} /}
+		&
+		'' \cA{irgendwas} '' $\rightarrow$ \pause '' \cB{bar} ''\\\pause
+		{\tt s/ \cA{(foo)} \cB{(bar)} / \cB{\bsl2} \cA{\bsl1} /}
+		&
+		'' \cA{foo} \cB{bar} '' $\rightarrow$ \pause '' \cB{bar} \cA{foo} ''
+	\end{tabular}\\\pause
 	Sonstige Befehle:\\\pause
-	{\tt :irgendwo} Eine Sprungmarke\\\pause
-	{\tt t irgendwo} Springe zur Sprungmarke\\\pause
-	{\tt p } Drucke aus, was du grade denkst\\
+	\begin{tabular}{ll}
+		{\tt :irgendwo} & Eine Sprungmarke\\\pause
+		{\tt t irgendwo} & Springe zur Sprungmarke\\\pause
+		{\tt p } & Drucke aus, was du grade denkst
+	\end{tabular}
 
 \end{frame}
 
-
-\begin{frame}{ {\tt sed} kann alle Teile von Manuels Turingmaschine bauen!}
-
-	Manuels Maschine besteht aus:\\\pause
-	Zust\"anden\\\pause
-	Zunstands\"uberg\"angen\\\pause
-	Band\\\pause
-	Kopf\\
-\end{frame}
 
 \begin{frame}{ Zust\"ande und \"Uberg\"ange }
-	Jeder Zustand hat einen Namen!\\\pause
-	AlterZustand $\rightarrow$ NeuerZustand \only<2>{(wie ?)} % dummes bild!
-	\\\pause
-	{\tt s/AlterZustand/NeuerZustand/} \only<3>{(duh !)}
-	\\\pause
-	--separator--\\
-	Aber der \"Ubergang h\"angt von einen Zeichen ab!\\\pause
-	AlterZustand $0\rightarrow$ EinZustand \\ % dummes bild!
-	AlterZustand $1\rightarrow$ AndererZustand \\ % dummes bild!
-	\pause
-	{\tt s/AlterZustand:0/EinZustand:0/}\\
-	{\tt s/AlterZustand:1/NeuerZustand:1/}\\
+	\hspace{12em}
+	''\cC{ZUSTAND}:\cB{X}''\\\pause
+	\bigskip	
+	Zustands\"ubergang:\\
+	\hspace{15em}
+	\texttt{s/\only<3->\cC{ZUSTAND-ALT}/\only<3->\cC{ZUSTAND-NEU}/}
+	\\\pause\pause
+	X lesen und Y schreiben:\\
+	\hspace{15em}
+	\texttt{s/\only<5->\cB{X}/\only<5->\cB{Y}/}
+	\\\pause\pause
+	beides gleichzeitig:\\
+	\hspace{15em}
+	\texttt{s/\only<7->\cC{ZUSTAND-ALT}:\only<8->\cB{X}/\only<7->\cC{ZUSTAND-NEU}:\only<8->\cB{Y}/}
+	\\\pause\pause\pause
+	Entscheidungen:\\
+	\hspace{15em}
+	\texttt{s/\only<11->\cC{ZUSTAND-ALT}:\only<10->\cB{X}/\only<11->\cC{ZUSTAND-X}:\only<10->\cB{Y}/}\\
+	\hspace{15em}
+	\texttt{s/\only<11->\cC{ZUSTAND-ALT}:\only<10->\cB{U}/\only<11->\cC{ZUSTAND-U}:\only<10->\cB{V}/}
+	\\\pause\pause
 \end{frame}
 
 \begin{frame}{BandKopfApparat}
-	%\begin{dummeIdee}
-	@ sieht aus wie ein Kopf...\\\pause %Dumme Grafik!
-	%\end{dummeIdee}
-	Nach links gehen:\\
-	''Hallo W@elt'' $\rightarrow$ ''Hallo @Welt''\\\pause
-	\texttt{s/(.*)(.)@(.*)/\bsl1@\bsl2\bsl3/}\\\pause
+	\hspace{8em}
+	''\cA{00100100001001\cD{@}\cB{0}10100101010}''\\\pause
+	\bigskip
 	e lesen und \"a schreiben:\\
-	''Hallo W@elt'' $\rightarrow$ ''Hallo W@\"alt''\\\pause
-	\texttt{s/(.*)@e(.*)/\bsl1@\"a\bsl2/}\\\pause
+	\hspace{15em}
+	''\only<5->\cA{Hallo W}\only<3->\cD{@}\only<4->\cB{e}\only<5->\cA{lt}''
+	$\rightarrow$
+	''\only<5->\cA{Hallo W}\only<3->\cD{@}\only<4->\cB{\"a}\only<5->\cA{lt}''
+	\\
+	\hspace{15em}
+	\texttt{s/\only<5->\cA{(.*)}\only<3->\cD{@}\only<4->\cB{e}\only<5->\cA{(.*)}/\only<5->\cA{\bsl1}\only<3->\cD{@}\only<4->\cB{\"a}\only<5->\cA{\bsl2}/}
+	\\\pause\pause\pause\pause
+
+	Nach links gehen:\\
+	\hspace{15em}
+	''\only<9->\cA{Hallo }\only<8->\cB{W}\only<7->\cD{@}\only<9->\cA{elt}''
+	$\rightarrow$
+	''\only<9->\cA{Hallo }\only<7->\cD{@}\only<8->\cB{W}\only<9->\cA{elt}''
+	\\
+	\hspace{15em}
+	\texttt{s/\only<9->\cA{(.*)}\only<8->\cB{(.)}\only<7->\cD{@}\only<9->\cA{(.*)}/\only<9->\cA{\bsl1}\only<7->\cD{@}\only<8->\cB{\bsl2}\only<9->\cA{\bsl3}/}
+	\\\pause\pause\pause\pause
+
+
 	Beides Zusammen:\\
-	''Hallo W@elt'' $\rightarrow$ ''Hallo @W\"alt''\\\pause
-	\texttt{s/(.*)(.)@e(.*)/\bsl1@\bsl2\"a\bsl3/}\\
+	\hspace{15em}
+	''\only<14->\cA{Hallo }\only<13->\cC{W}\only<11->\cD{@}\only<12->\cB{e}\only<14->\cA{lt}''
+	$\rightarrow$
+	''\only<14->\cA{Hallo }\only<11->\cD{@}\only<13->\cC{W}\only<12->\cB{\"a}\only<14->\cA{lt}''
+	\\
+	\hspace{15em}
+	\texttt{s/\only<14->\cA{(.*)}\only<13->\cC{(.)}\only<11->\cD{@}\only<12->\cB{e}\only<14->\cA{(.*)}/\only<14->\cA{\bsl1}\only<11->\cD{@}\only<13->\cC{\bsl2}\only<12->\cB{\"a}\only<14->\cA{\bsl3}/}
+	\\\pause\pause\pause\pause
 \end{frame}
 
 
-\begin{frame}{Die {\tt sed} Turingmaschine}
-	Wir brauchen:\\\pause
-	1. Zustands\"ubergang \\\pause
-	2. Lesen / Schreiben \\\pause
-	3. Gehe nach (links/rechts)\\\pause
-	Alles Gleichzeitig!\\\pause
+\begin{frame}{{\tt sed} Turingmaschinenzustands\"uberg\"nge}
+	\hspace{8em}
+	''\cC{ZUSTAND}:\cA{001001001011\cE{1}\cD{@}\cB{0}001010010011}''\\\pause
+	\bigskip
+	\texttt{s/\only<3->\cC{ZUSTAND-ALT}:\only<6->\cA{(.*)}\only<5->\cE{(.)}\only<5->\cD{@}\only<4->\cB{X}\only<6->\cA{(.*)}/\only<3->\cC{ZUSTAND-NEU}:\only<6->\cA{\bsl1}\only<5->\cD{@}\only<5->\cE{\bsl2}\only<4->\cB{Y}\only<6->\cA{\bsl3}/}\\
+	%\texttt{s/\only<3->\cC{ZUSTAND-ALT}:\only<6->\cA{(.*)}\only<5->\cD{@}\only<4->\cB{X}\only<5->\cE{(.)}\only<6->\cA{(.*)}/\only<3->\cC{ZUSTAND-NEU}:\only<6->\cA{\bsl1}\only<4->\cB{Y}\only<5->\cD{@}\only<5->\cE{\bsl2}\only<6->\cA{\bsl3}/}\\
+	\pause
+	\bigskip
 
-	Gehe von ZUSTAND-ALT in ZUSTAND-NEU wenn du X liest und schreibe Y und\\
-	\quad1. Gehe nach links:\\\pause
-	\texttt{s/ZUSTAND-ALT:(.*)(.)@X(.*)/ZUSTAND-NEU:\bsl1@\bsl2Y\bsl3/}\\\pause
-	\quad2. Gehe nach rechts:\\\pause
-	\texttt{s/ZUSTAND-ALT:(.*)@X(.)(.*)/ZUSTAND-NEU:\bsl1Y@\bsl2\bsl3/}\\
+	%TODO: Manu tikz Bild
+	1. Gehe von \cC{ZUSTAND-ALT} in den \cC{ZUSTAND-NEU}\\\pause
+	{2. Lese ein \cB{X} und schreibe ein \cB{Y}}\\\pause
+	{3. Gehe nach links oder rechts (vetausche \cD{@} und \cE{1}):}\\\pause
+	
 \end{frame}
 
+\begin{frame}{ Die {\tt sed} Turingmaschine}
+	
+	\tt
+	s/\cA{(.*)}/\cC{STARTZUSTAND}:\cD{@}\cA{\bsl1}/\\\pause
+	\only<3->{:nochmal}~\\
+	\only<3->{p}~\\
+	\textit{Zustands\"ubergang}\only<3->{ ; t nochmal}\\
+	\textit{Zustands\"ubergang}\only<3->{ ; t nochmal}\\
+	\textit{Zustands\"ubergang}\only<3->{ ; t nochmal}\\
+	\pause\pause
+	s/\cD{@}//\\\pause
+	s/\cC{(.*)}:\cA{(.*)}/\cA{\bsl2}/\\
+
+\end{frame}
+
+\begin{frame}{colortest}
+
+	{ \color{BrickRed} X}
+	{ \color{red} X}
+	{ \color{Maroon} X}
+	{ \color{Brown} X}
+	{ \color{Sepia} X}
+	\\
+	{ \color{PineGreen} X}
+	{ \color{OliveGreen} X}
+	{ \color{ForestGreen} X}
+	{ \color{LimeGreen} X}
+	{ \color{RoyalBlue} X}
+	{ \color{NavyBlue} X}
+	\\
+	{ \color{BurntOrange} X}
+	{ \color{YellowOrange} X}
+	{ \color{Yellow} X}
+	{ \color{Goldenrod} X}
+	\\
+	\cA{cA}\cB{cB}\cC{cC}\cD{cD}\cE{cE}
+	\\
+	{ \color{YellowOrange} X}
+	{ \color{NavyBlue} X}
+	%{ \color{LimeGreen} X}
+	{ \color{red} X}
+	{ \color{Violet} X}
+	{ \color{OliveGreen} X}
+	{ \color{CadetBlue} X}
+	{ \color{Gray} X}
+\end{frame}
 
 
 \end{document}
