@@ -1,0 +1,84 @@
+\begin{frame}{Was haben wir gesehen?}
+	\uncover<4->{\Large \textbf{Turing-Vollständigkeit}}	
+	\begin{itemize}
+		\item \textcolor{goetheblau}{sed} kann eine \textcolor{emorot}{Turing Maschine} ausführen
+		\pause
+		\item Eine \textcolor{emorot}{Turing Maschine} kann \textcolor{goetheblau}{sed} ausführen
+		\pause
+		\item[$\Rightarrow$] Beide sind gleich mächtig!
+	\end{itemize}
+		
+	\vspace{1em}
+	\pause
+\end{frame}
+
+\begin{frame}{Was ist nicht Turing-Vollständig}
+	\begin{itemize}
+		\item
+			\textbf{Turing Maschine ohne Band} (= sed ohne Sprünge)\\
+		\pause	
+			Reguläre Sprachen
+			\vspace{1em}
+
+		\pause			
+		\item
+			\textbf{Turing Maschinen mit Keller-Speicher} (LiFo)\\
+		\pause
+			Kontext-freie Sprachen
+			\vspace{1em}			
+			
+		\pause
+		\item
+			Datenbeschreibungssprachen:
+			XML, HTML, JSON, YAML, CSV, Markup
+			\vspace{1em}
+						
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Achja \ldots}
+\begin{center}
+\ldots die Turing Maschine am Anfang haben wir direkt in \LaTeX{} berechnet.
+
+\vspace{1em}
+
+\pause
+\textcolor{goetheblau}{Dieser Foliensatz ist also auch Turing vollständig.}
+\end{center}
+%
+%\pause	
+%\begin{lstlisting}
+%\def\tmMoveRightHelp#1@#2@#3#4\relax{{%
+%	\ifx#3\relax
+%		\xdef\tmNewBand{#1#2@B@}%
+%	\else
+%		\xdef\tmNewBand{#1#2@#3@#4}%
+%	\fi
+%}}
+%
+%\newcommand{\tmMoveRight}{%
+%	\def\tmNewBand{}%
+%	\expandafter\tmMoveRightHelp\tmBand\relax\relax\relax\relax\relax%
+%	\xdef\tmBand{\tmNewBand}
+%}
+%\end{lstlisting}
+\end{frame}
+
+
+\setbeamertemplate{footline}{} 
+\goethccBgTitel
+\begin{frame}{}
+	\titlepage
+	\begin{tikzpicture}[overlay]
+	\node[anchor=south east, xshift=-0.08\textwidth, at=(current page.south east)] {
+		\parbox{0.3\textwidth}{
+		\begin{center}
+			\scalebox{1.5}{\qrcode{http://nos.manuel.jetzt/}}
+			
+			\vspace{1em}
+			
+			\small\textcolor{goetheblau}{\url{http://nos.manuel.jetzt}}
+		\end{center}
+	}};
+	\end{tikzpicture}
+\end{frame}

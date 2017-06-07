@@ -1,4 +1,3 @@
-
 \newcommand{\handwrittenNoteBelow}[3]{
 	\node[goetheblau, anchor=west, align=left] at ($(#1)+(1.6,-0.6)#3$) {\Large \Fontauri\bfseries #2};
 	\path[<-, draw, goetheblau, ultra thick, bend right=15] ($(#1)#3$) to ++(1.5,-0.5);
@@ -10,16 +9,42 @@
 }
 
 
-\begin{frame}{Wat is'n a Turing Maschin'}
+\begin{frame}{}
+	\begin{center}
+		\Huge
+		\only<+>{Turing Maschine}
+		\large
+		\only<+>{\includegraphics[height=0.7\textheight]{images/what-year-is-it.jpg}}
+		\only<+>{
+			\includegraphics[height=0.6\textheight]{images/turing.jpg}
+			\hspace{2em}
+			\includegraphics[height=0.6\textheight]{images/nos2012.jpg}
+			\vspace{1em}
+						
+			Alan M. Turing\\
+			1912 -- 1954 
+		}
+		\only<+>{
+			\fbox{\includegraphics[height=0.6\textheight]{images/turing1936.png}}
+			\vspace{1em}
+			
+			\textquotedblleft On Computable Numbers, With an Application to the Entscheidungsproblem\textquotedblright\\
+			\textcolor{goetheblau}{[A. Turing, 1936/37]}
+		}
+	\end{center}
+\end{frame}
+
+
+\begin{frame}{Turing Maschine}
 	\begin{center}
 		\vspace{2em}
 
-		\uncover<6->{
+		\uncover<7->{
 			\begin{tikzpicture}[remember picture]
 				\node[tmState, draw] (stateA) {Zustand A};
 				\node[tmState, draw, anchor=west] (stateB) at ($(stateA.east) + (5,0)$)  {Zustand B};
 				
-				\path[draw, ->, thick, bend left=10, shorten >=5pt] (stateA) to node[above] {\tikzanchor{transAnchor} \texttt 0 zu \texttt 1, $\Rightarrow$} (stateB);
+				\path[draw, ->, thick, bend left=10, shorten >=5pt, onslide={<8>, emorot}] (stateA) to node[above] {\tikzanchor{transAnchor} \texttt 0 zu \texttt 1, $\Rightarrow$} (stateB);
 				\path[draw, ->, thick, bend left=10, shorten >=5pt] (stateB) to node[below,align=left] {\texttt 0 zu \texttt 0, $\Leftarrow$ \\ \texttt 1 zu \texttt 1, $\Leftarrow$} (stateA);
 			\end{tikzpicture}
 
@@ -27,7 +52,7 @@
 				\handwrittenNoteBelow{stateB}{Programm}{-(2,1)}
 							
 			
-				\only<7->{
+				\only<8->{
 					\handwrittenNoteAbove{transAnchor}
 					{\normalfont\normalsize Wenn \textcolor{emorot}{\texttt 0} gelesen:\\ Schreibe \textcolor{emorot}{\texttt 1}, Kopf nach rechts}
 					{+(1.8,0.2)}
@@ -80,8 +105,11 @@
 				\node[tmHeadMarker, at=(tmbandcell0)] {};
 				\handwrittenNoteAbove{tmbandcell0}{Kopf}{+(0.4, 0.4)}
 			}
+			
+			\only<6->{
+				\node[emorot, anchor=north, at=(tmbandcell0.south), yshift=-0.2em] {\Large $\Leftarrow, \Downarrow, \Rightarrow$};
+			
+			}
 		\end{tikzpicture}
 	\end{center}
-	
-	
 \end{frame}
