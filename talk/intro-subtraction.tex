@@ -1,12 +1,27 @@
+\begin{frame}{}
+	\begin{center}
+		\scalebox{1.5}{\Huge \textcolor{emorot}{Subtraktion}}
+		
+		\vspace{1em}
+		
+		{\large \textcolor{goetheblau}{Minus-Rechnen}}
+	\end{center}
+\end{frame}
+
+
 \begin{frame}{Subtraktion}
 	\begin{center}
 		\Huge
 
-		\only<+>{\bf{\textcolor{emorot}{Selbsttest}}}
+		\only<+>{
+			\scalebox{1.5}{\Huge \textcolor{emorot}{Selbsttest}}
+		}		
 		\only<+>{$\textcolor{goetheblau}{7}-\textcolor{emorot}{3}=\underline{\phantom4}$}
 		\only<+>{$\textcolor{goetheblau}{7}-\textcolor{emorot}{3}=\textcolor{orange}{\underline{4}}$}
 		
-		\only<+>{\bf{\textcolor{emorot}{Und noch einer \ldots}}}
+		\only<+>{
+			\scalebox{1.5}{\Huge \textcolor{emorot}{Und noch einer \ldots}}
+		}		
 		\only<+>{$\textcolor{goetheblau}{123}-\textcolor{emorot}{45}=\underline{\phantom{78}}$}
 		\only<+>{
 			$\textcolor{goetheblau}{123}-\textcolor{emorot}{45}=\textcolor{orange}{\underline{78}}$
@@ -86,7 +101,7 @@
 				
 				\node[header, fill=sandgrau, minimum height=2em] at (6*\sx, -6*\sy) {$\ddots$};
 				
-				\node[goetheblau, draw, minimum width=28em, minimum height=11em, anchor=north west] {};
+				\node[goetheblau, draw, minimum width=28em, minimum height=11em, anchor=north west, onslide={<4->white, fill=white, opacity=0.8}] (tabborder) {};
 			\end{tikzpicture}
 		}
 	\end{center}
@@ -99,6 +114,7 @@
 		
 		\only<4->{
 			\node[draw, radius=0.5em, rounded corners=1em, emorot, fill=white, opacity=0.8, inner sep=2em] at (current page) {\phantom{\Huge Nicht praktikabel für große Zahlen!}};
+			
 			\node[emorot, inner sep=2em] at (current page) {\Huge Unpraktisch für große Zahlen!};
 		}
 	\end{tikzpicture}
