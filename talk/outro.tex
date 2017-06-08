@@ -1,69 +1,95 @@
-\begin{frame}{Was haben wir gesehen?}
-	\uncover<4->{\Large \textbf{Turing-Vollständigkeit}}	
-	\begin{itemize}
-		\item \textcolor{goetheblau}{sed} kann eine \textcolor{emorot}{Turing Maschine} ausführen
-		\pause
-		\item Eine \textcolor{emorot}{Turing Maschine} kann \textcolor{goetheblau}{sed} ausführen
-		\pause
-		\item[$\Rightarrow$] Beide sind gleich mächtig!
-	\end{itemize}
-		
-	\vspace{1em}
-	\pause
+\begin{frame}{Warum sind Turing Maschinen \emph{wirklich} nützlich?}
+	\textcolor{goetheblau}{Was haben wir gesehen?} \\
+	$\left.\text{\parbox{0.5\textwidth}{
+		\begin{itemize}
+			\item<2-> \textcolor{goetheblau}{sed} kann eine \textcolor{emorot}{Turing Maschine} ausführen
+			\item<3-> Eine \textcolor{emorot}{Turing Maschine} kann \textcolor{goetheblau}{sed} ausführen
+			\item<4->[$\Rightarrow$] Beide sind gleich mächtig!
+		\end{itemize}
+	}}
+	\hspace{1em}
+	\only<-4>{\right.}
+	\only<5->{\right\}\hspace{1em} \textbf{Turing Vollständig}}
+	$
 \end{frame}
 
-\begin{frame}{Was ist nicht Turing-Vollständig}
+\begin{frame}{Was können Turing Maschinen \textbf{nicht}?}
 	\begin{itemize}
-		\item
-			\textbf{Turing Maschine ohne Band} (= sed ohne Sprünge)\\
-		\pause	
-			Reguläre Sprachen
-			\vspace{1em}
-
-		\pause			
-		\item
-			\textbf{Turing Maschinen mit Keller-Speicher} (LiFo)\\
+		\item Eingabe/Ausgabe beschreiben
 		\pause
-			Kontext-freie Sprachen
-			\vspace{1em}			
+		\item Schnell rechnen
+		\pause
+		
+		\vspace{1em}
+
+		\item Für ein \textcolor{goetheblau}{beliebiges} Programm $P$ entscheiden, 
+		\begin{itemize}
+			\item \ldots ob $P$ fertig wird
+			\pause
+			\item \ldots ob $P$ für eine feste Eingabe, eine feste Ausgabe berechnet
+			\pause
+			\item \ldots ob $P$ eine nicht triviale Eigenschaft erfüllt
+		\end{itemize}
+
+		\vspace{1em}
+
+		\item 
+		Bei \textcolor{goetheblau}{beliebigen} \textquotedblleft Domino-Steinen\textquotedblright{} berechnen,\\ ob man oben und unten diesselben Worte legen kann
+	\end{itemize}
+	
+	\begin{center}
+		\begin{tikzpicture}[
+			domino/.style={draw, goetheblau, align=center, minimum width=2.5em, minimum height=5em, text=emorot}
+		]
+	
+			\node[domino] (d1) {Tu \\[2em] T};
+			\path[draw, goetheblau] (d1.west) to (d1.east);
+		
+			\node[domino, right=1em of d1] (d2) {r \\[2em] uri};
+			\path[draw, goetheblau] (d2.west) to (d2.east);
+	
+			\node[domino, right=1em of d2] (d3) {ing \\[2em] ng};
+			\path[draw, goetheblau] (d3.west) to (d3.east);
+		\end{tikzpicture}
+	\end{center}
+	
+\end{frame}
+
+
+\begin{frame}{Was ist nicht Turing-Vollständig?}
+	\begin{itemize}
+		\item 
+			Reine Daten
+			\begin{itemize}
+				\item (Werte-)Tabellen
+				\item HTML, XML
+				\item Rechenschieber
+			\end{itemize}
+		
+			\vspace{1em}
 			
 		\pause
-		\item
-			Datenbeschreibungssprachen:
-			XML, HTML, JSON, YAML, CSV, Markup
-			\vspace{1em}
-						
+		
+		\item Endliche Automaten
+			\begin{itemize}
+				\item 
+					Turing Maschine mit schreibgeschüztem Band
+					
+				\item
+					Turing Maschine, die den Kopf nur nach rechts bewegen darf
+					
+				\item
+					Reguläre Sprachen
+					
+				\item
+					\texttt{sed} ohne Sprünge
+			\end{itemize}
+		
+		\pause
+		
+		\item \ldots
 	\end{itemize}
 \end{frame}
-
-\begin{frame}[fragile]{Achja \ldots}
-\begin{center}
-\ldots die Turing Maschine am Anfang haben wir direkt in \LaTeX{} berechnet.
-
-\vspace{1em}
-
-\pause
-\textcolor{goetheblau}{Dieser Foliensatz ist also auch Turing vollständig.}
-\end{center}
-%
-%\pause	
-%\begin{lstlisting}
-%\def\tmMoveRightHelp#1@#2@#3#4\relax{{%
-%	\ifx#3\relax
-%		\xdef\tmNewBand{#1#2@B@}%
-%	\else
-%		\xdef\tmNewBand{#1#2@#3@#4}%
-%	\fi
-%}}
-%
-%\newcommand{\tmMoveRight}{%
-%	\def\tmNewBand{}%
-%	\expandafter\tmMoveRightHelp\tmBand\relax\relax\relax\relax\relax%
-%	\xdef\tmBand{\tmNewBand}
-%}
-%\end{lstlisting}
-\end{frame}
-
 
 \setbeamertemplate{footline}{} 
 \goethccBgTitel
@@ -73,7 +99,7 @@
 	\node[anchor=south east, xshift=-0.08\textwidth, at=(current page.south east)] {
 		\parbox{0.3\textwidth}{
 		\begin{center}
-			\scalebox{1.5}{\qrcode{http://nos.manuel.jetzt/}}
+			\scalebox{1.5}{\qrcode{http://nos17.manuel.jetzt}}
 			
 			\vspace{1em}
 			
