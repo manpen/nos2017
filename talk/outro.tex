@@ -36,23 +36,6 @@
 		\item 
 		Bei \textcolor{goetheblau}{beliebigen} \textquotedblleft Domino-Steinen\textquotedblright{} berechnen,\\ ob man oben und unten diesselben Worte legen kann
 	\end{itemize}
-	
-	\begin{center}
-		\begin{tikzpicture}[
-			domino/.style={draw, goetheblau, align=center, minimum width=2.5em, minimum height=5em, text=emorot}
-		]
-	
-			\node[domino] (d1) {Tu \\[2em] T};
-			\path[draw, goetheblau] (d1.west) to (d1.east);
-		
-			\node[domino, right=1em of d1] (d2) {r \\[2em] uri};
-			\path[draw, goetheblau] (d2.west) to (d2.east);
-	
-			\node[domino, right=1em of d2] (d3) {ing \\[2em] ng};
-			\path[draw, goetheblau] (d3.west) to (d3.east);
-		\end{tikzpicture}
-	\end{center}
-	
 \end{frame}
 
 
