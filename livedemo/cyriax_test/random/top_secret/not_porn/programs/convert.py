@@ -7,9 +7,6 @@
 # echo INITIAL_TAPE_CONTENT | sed -f TURING_MACHINE.sed
 # uses mainly str.split() and str.find() to 
 
-
-
-
 import sys
 
 def transition(old,new,read,write,direction):
