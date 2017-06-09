@@ -61,7 +61,7 @@
 \newcommand{\cE}[1]{{\color{OliveGreen}#1}}
 \newcommand{\cF}[1]{{\color{CadetBlue}#1}}
 \newcommand{\cG}[1]{{\color{Gray}#1}}
-
+\newcommand{\sedunder}[2]{$\underset{\text{#1}}{\text{#2}}$}
 %\frame{\frametitle{Outline}\tableofcontents}
 
 %%%%%%%%%%%%%
@@ -74,7 +74,7 @@
 	\only<6->{''\textbf{S}tream \textbf{Ed}itor''}\\
 	}
 	\pause\pause\pause\pause\pause\pause
-	{\tt sed} ist ein Linux Programm \\\pause
+	{\tt sed} ist ein echtes ausf\"uhrbares Programm \\\pause
 	{\tt sed} kann Text(-dateien) automatisch \"andern\\\pause
 	{\tt sed} sucht Dinge und ersetzt sie durch Zeuch\\\pause
 	{\Large \quad\quad ergo folgt deshalb daraus:\\\pause}
@@ -83,13 +83,6 @@
 \end{frame}
 
 \begin{frame}{Womit arbeitet {\tt sed}}
-
-	%Strings sind Zeichenketten:\\
-	%\hspace{2em}\textit{''Hallo Welt!''}\\\pause
-	%\hspace{2em}\textit{''covfefe''}\\\pause
-	%\hspace{2em}\textit{''111-11''}\\\pause
-	%\bigskip
-	%Regul\"are Ausdr\"ucke sind Beschreibungen von Strings:\\
 	\begin{tabular}{ll}
 
 		\textit{\cA{h}\cB{a}\cC{ll}\cD{o}} &
@@ -114,7 +107,7 @@
 	\end{tabular}
 \end{frame}
 
-\begin{frame}{{\tt sed} - Grundlegende Befehle} %obsolet, weil editwar. Aber bleibt drin, wegen realistischer
+\begin{frame}{{\tt sed} - Grundlegende Kommandos}
 	Suchen und Ersetzen (alles andere is unwichtig):\\\pause
 	\begin{tabular}{ll}
 		{\tt s/ / /}
@@ -126,14 +119,16 @@
 		{\tt s/ \cA{.*} / \cB{Zeuch} /}
 		&
 		'' \cA{irgendwas} '' $\rightarrow$ \pause '' \cB{Zeuch} ''\\\pause
-		{\tt s/ \cA{(Dinge)} \cB{(Zeuch)} / \cB{\bsl2} \cA{\bsl1} /}
+		{\tt s/ \cA{\sedunder{\bsl1}{(Dinge)}} \cB{\sedunder{\bsl2}{(Zeuch)}} / \cB{\bsl2} \cA{\bsl1} /}
 		&
 		'' \cA{Dinge} \cB{Zeuch} '' $\rightarrow$ \pause '' \cB{Zeuch} \cA{Dinge} ''
-	\end{tabular}\\\pause
+	\end{tabular}\pause
+
+	\bigskip
 	Sonstige Befehle:\\\pause
 	\begin{tabular}{ll}
-		{\tt :irgendwo} & Eine Sprungmarke\\\pause
-		{\tt t irgendwo} & Springe zur Sprungmarke\\\pause
+		{\tt :\cA{irgendwo}} & Eine Sprungmarke\\\pause
+		{\tt t \cA{irgendwo}} & Springe zur Sprungmarke\\\pause
 		{\tt p } & Drucke aus, was du grade denkst
 	\end{tabular}
 
@@ -141,27 +136,23 @@
 
 
 \begin{frame}{ Zust\"ande und \"Uberg\"ange }
+	Zustands\"ubergang:\\
+	\hspace{12em}
+	''\cC{ZUSTAND}''\\\pause
+	\bigskip	
+	\hspace{15em}
+	\texttt{s/\visible<2->{\cC{ZUSTAND-ALT}}/%
+	\visible<3->{\cC{ZUSTAND-NEU}}/}\\
+	\pause\pause
+	\bigskip
+	Entscheidung:\\
 	\hspace{12em}
 	''\cC{ZUSTAND}:\cB{X}''\\\pause
-	\bigskip	
-	Zustands\"ubergang:\\
+	\bigskip
 	\hspace{15em}
-	\texttt{s/\only<3->\cC{ZUSTAND-ALT}/\only<3->\cC{ZUSTAND-NEU}/}
-	\\\pause\pause
-	X lesen und Y schreiben:\\
+	\texttt{s/\visible<5->{\cC{ZUSTAND-ALT}:}\visible<6->{\cB{X}}/\visible<8->{\cC{ZUSTAND-1}:\cB{X}}/}\\
 	\hspace{15em}
-	\texttt{s/\only<5->\cB{X}/\only<5->\cB{Y}/}
-	\\\pause\pause
-	beides gleichzeitig:\\
-	\hspace{15em}
-	\texttt{s/\only<7->\cC{ZUSTAND-ALT}:\only<8->\cB{X}/\only<7->\cC{ZUSTAND-NEU}:\only<8->\cB{Y}/}
-	\\\pause\pause\pause
-	Entscheidungen:\\
-	\hspace{15em}
-	\texttt{s/\only<11->\cC{ZUSTAND-ALT}:\only<10->\cB{X}/\only<11->\cC{ZUSTAND-X}:\only<10->\cB{Y}/}\\
-	\hspace{15em}
-	\texttt{s/\only<11->\cC{ZUSTAND-ALT}:\only<10->\cB{U}/\only<11->\cC{ZUSTAND-U}:\only<10->\cB{V}/}
-	\\\pause\pause
+	\texttt{s/\visible<5->{\cC{ZUSTAND-ALT}:}\visible<7->{\cB{U}}/\visible<9->{\cC{ZUSTAND-2}:\cB{U}}/}
 \end{frame}
 
 \begin{frame}{BandKopfApparat}
@@ -175,7 +166,14 @@
 	''\only<5->\cA{Hallo W}\only<3->\cD{@}\only<4->\cB{\"a}\only<5->\cA{lt}''
 	\\
 	\hspace{15em}
-	\texttt{s/\only<5->\cA{(.*)}\only<3->\cD{@}\only<4->\cB{e}\only<5->\cA{(.*)}/\only<5->\cA{\bsl1}\only<3->\cD{@}\only<4->\cB{\"a}\only<5->\cA{\bsl2}/}
+	\texttt{%
+		s/%
+		\visible<5->{\cA{\sedunder{\bsl1}{(.*)}}}%
+		\visible<3->{\cD{@}}\visible<4->{\cB{e}}%
+		\visible<5->{\cA{\sedunder{\bsl2}{(.*)}}}/%
+	\visible<5->{\cA{\bsl1}}%
+	\visible<3->{\cD{@}}\visible<4->{\cB{\"a}}%
+	\visible<5->{\cA{\bsl2}}/}
 	\\\pause\pause\pause\pause
 
 	Nach links gehen:\\
@@ -185,19 +183,11 @@
 	''\only<9->\cA{Hallo }\only<7->\cD{@}\only<8->\cB{W}\only<9->\cA{elt}''
 	\\
 	\hspace{15em}
-	\texttt{s/\only<9->\cA{(.*)}\only<8->\cB{(.)}\only<7->\cD{@}\only<9->\cA{(.*)}/\only<9->\cA{\bsl1}\only<7->\cD{@}\only<8->\cB{\bsl2}\only<9->\cA{\bsl3}/}
-	\\\pause\pause\pause\pause
-
-
-	Beides Zusammen:\\
-	\hspace{15em}
-	''\only<14->\cA{Hallo }\only<13->\cC{W}\only<11->\cD{@}\only<12->\cB{e}\only<14->\cA{lt}''
-	$\rightarrow$
-	''\only<14->\cA{Hallo }\only<11->\cD{@}\only<13->\cC{W}\only<12->\cB{\"a}\only<14->\cA{lt}''
-	\\
-	\hspace{15em}
-	\texttt{s/\only<14->\cA{(.*)}\only<13->\cC{(.)}\only<11->\cD{@}\only<12->\cB{e}\only<14->\cA{(.*)}/\only<14->\cA{\bsl1}\only<11->\cD{@}\only<13->\cC{\bsl2}\only<12->\cB{\"a}\only<14->\cA{\bsl3}/}
-	\\\pause\pause\pause\pause
+	\texttt{%
+		s/\visible<9->{\cA{\sedunder{\bsl1}{(.*)}}}%
+		\visible<8->{\cB{\sedunder{\bsl2}{(.)}}}\visible<7->{\cD{@}}%
+		\visible<9->{\cA{\sedunder{\bsl3}{(.*)}}}/%
+	\visible<9->{\cA{\bsl1}}\visible<7->{\cD{@}}\visible<8->{\cB{\bsl2}}\visible<9->{\cA{\bsl3}}/}
 \end{frame}
 
 
@@ -205,30 +195,41 @@
 	\hspace{8em}
 	''\cC{ZUSTAND}:\cA{001001001011\cE{1}\cD{@}\cB{0}001010010011}''\\\pause
 	\bigskip
-	\texttt{s/\only<3->\cC{ZUSTAND-ALT}:\only<6->\cA{(.*)}\only<5->\cE{(.)}\only<5->\cD{@}\only<4->\cB{X}\only<6->\cA{(.*)}/\only<3->\cC{ZUSTAND-NEU}:\only<6->\cA{\bsl1}\only<5->\cD{@}\only<5->\cE{\bsl2}\only<4->\cB{Y}\only<6->\cA{\bsl3}/}\\
-	%\texttt{s/\only<3->\cC{ZUSTAND-ALT}:\only<6->\cA{(.*)}\only<5->\cD{@}\only<4->\cB{X}\only<5->\cE{(.)}\only<6->\cA{(.*)}/\only<3->\cC{ZUSTAND-NEU}:\only<6->\cA{\bsl1}\only<4->\cB{Y}\only<5->\cD{@}\only<5->\cE{\bsl2}\only<6->\cA{\bsl3}/}\\
+	\texttt{s/%
+	\visible<4->{\cC{ZUSTAND-ALT}:}%
+	\visible<10->{\cA{\sedunder{\bsl1}{(.*)}}}%
+	\visible<9->{\cE{\sedunder{\bsl2}{(.)}}}%
+	\visible<6->{\cD{@}}%
+	\visible<7->{\cB{X}}%
+	\visible<10->{\cA{\sedunder{\bsl3}{(.*)}}}/%
+	\visible<4->{\cC{ZUSTAND-NEU}:}%
+	\visible<10->{\cA{\bsl1}}%
+	\visible<6->{\cD{@}}%
+	\visible<9->{\cE{\bsl2}}%
+	\visible<7->{\cB{Y}}%
+	\visible<10->{\cA{\bsl3}}%
+	/}\\
 	\pause
 	\bigskip
 
 	%TODO: Manu tikz Bild
-	1. Gehe von \cC{ZUSTAND-ALT} in den \cC{ZUSTAND-NEU}\\\pause
-	{2. Lese ein \cB{X} und schreibe ein \cB{Y}}\\\pause
-	{3. Gehe nach links oder rechts (vetausche \cD{@} und \cE{1}):}\\\pause
+	1. Gehe von \cC{ZUSTAND-ALT} in den \cC{ZUSTAND-NEU}\\\pause\pause
+	2. Lese ein \cB{X} und schreibe ein \cB{Y}\\\pause\pause\pause
+	3. Gehe nach links oder rechts (vetausche \cD{@} und \cE{1}):
 	
 \end{frame}
 
 \begin{frame}{ Die {\tt sed} Turingmaschine}
 	
 	\tt
-	s/\cA{(.*)}/\cC{STARTZUSTAND}:\cD{@}\cA{\bsl1}/\\\pause
-	\only<3->{:nochmal}~\\
-	\only<3->{p}~\\
-	\textit{Zustands\"ubergang}\only<3->{ ; t nochmal}\\
-	\textit{Zustands\"ubergang}\only<3->{ ; t nochmal}\\
-	\textit{Zustands\"ubergang}\only<3->{ ; t nochmal}\\
-	\pause\pause
-	s/\cD{@}//\\\pause
-	s/\cC{(.*)}:\cA{(.*)}/\cA{\bsl2}/\\
+	\visible<3->{s/\cA{(.*)}/\cC{STARTZUSTAND}:\cD{@}\cA{\bsl1}/}\\
+	\visible<2->{:\cB{nochmal}}~\\
+	\visible<2->{p}~\\
+	\textit{Zustands\"ubergang}\visible<2->{ ; t \cB{nochmal}}\\
+	\textit{Zustands\"ubergang}\visible<2->{ ; t \cB{nochmal}}\\
+	\textit{Zustands\"ubergang}\visible<2->{ ; t \cB{nochmal}}\\
+	\visible<4->{s/\cD{@}//}\\
+	\visible<5->{s/\cC{(.*)}:\cA{(.*)}/\cA{\bsl2}/}
 
 \end{frame}
 
