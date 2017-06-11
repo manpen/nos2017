@@ -12,7 +12,7 @@
 			\foreach \n/\p in {#1} {
 				% default \p to {} if not defined (foreach will set it to \n)
 				\ifthenelse{\equal{\n}{\p}}{\def\p{}}{}
-				\path[simulates,\p] (#2) to (\n);
+				\path[simulates,\p] (#2) to node(#2-\n){} (\n);
 			}
 		\end{scope}
 	}
@@ -93,7 +93,17 @@
 				\includegraphics[width=0.15\textwidth]{images/python.png}
 				\end{center}
 			}}
-			\newconcept{python}{4}{45}{sed,tm}{Python}{}
+			\newconcept{python}{4}{45}{}{Python}{}
+			\only<\pausecounter->{			
+				\path[simulates, bend left=40] (python) to (sed-tm);
+			}
+			
+			\pause
+			\only<\pausecounter->{			
+				\path[simulates, bend right=40] (sed) to (sed-tm);
+			}
+			
+			
 
 			\pause
 			\setInfoPanel{				
@@ -140,10 +150,10 @@
 				\phantom.\hspace{1em}\textbf{if}(band.read()=="0") \{\\
 				\phantom.\hspace{1em}\ldots \}\}
 			}}}}			
-			\newconcept{cccc}{3}{22}{tm}{C/C++}{}
+			\newconcept{cccc}{3}{20}{tm}{C/C++}{}
 			
 			\pause
-			\newconcept{ctemp}{5}{22}{tm}{C++\\ templates}{}
+			\newconcept{ctemp}{5}{20}{tm}{C++\\ templates}{}
 		
 
 			\pause
@@ -185,7 +195,7 @@
 		
 			\pause
 			\only<\pausecounter->{
-				\newconcept{ram}{4}{330}{}{Register Machine}{}
+				\newconcept{ram}{4}{330}{}{Computer}{}
 				\simulateEdges{ram}{tm}
 			}
 
