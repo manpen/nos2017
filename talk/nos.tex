@@ -126,6 +126,10 @@
   \titlepage
   \begin{tikzpicture}[overlay]
 	  \node[anchor=south east, xshift=-0.08\textwidth, yshift=0.05\textheight, at=(current page.south east)] {\includegraphics[width=0.15\textwidth]{cs.pdf}};
+	  
+	  \only<2>{
+	  \node[at=(current page.south east), anchor=east, yshift=4em] {\includegraphics[width=0.4\textwidth]{images/windowsupdate.png}};
+	  }
   \end{tikzpicture}
 \end{frame}
 }
