@@ -25,6 +25,6 @@ with open(sys.argv[1], 'r') as f:
             transition(this_state,next_state,a[0],a[1],a[2])
     if "\\tmstart" in line:
         init_state = line.split("{")[1].split("}")[0].split(".")[0]
-        print("s/^B*\([^:B]*\)B*$/"+init_state+":B@\\1B/")
+        print("p\ns/^B*\([^:B]*\)B*$/"+init_state+":B@\\1B/")
         print(":loop\ns/:@/:B@/g\ns/@$/@B/\np")
 print("s/@//\ns/^[^:]*:B*\([^B]*\)B*$/\\1/")
