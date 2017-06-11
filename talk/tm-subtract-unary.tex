@@ -1,8 +1,8 @@
 \def\turingAStateDef{
 %%%%%% BEGIN-TM: turingI, B111-11B %%%%%
 	\tmstate{firstMinus}{Suche Minus}  {}{}
-	\tmstate{rightDigit}{Rechte Ziffer}{above right=of firstMinus}{}
-	\tmstate{leftDigit} {Linke Ziffer} {below right=of firstMinus}{}
+	\tmstate{rightDigit}{Suche Rechte Ziffer}{above right=of firstMinus}{}
+	\tmstate{leftDigit} {Suche Linke Ziffer} {below right=of firstMinus}{}
 	\tmstate{cleanUp}   {Aufräumen}    {below right=of rightDigit}{}
 	
 	\tmstart{firstMinus}
